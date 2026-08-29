@@ -66,16 +66,20 @@ namespace Windows.Configurations
             configuraçõesToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             sairToolStripMenuItem = new ToolStripMenuItem();
+            tabGeral = new TabPage();
+            cbGeralInitializeWindows = new CheckBox();
             tabDefault.SuspendLayout();
             tabAudio.SuspendLayout();
             tabPainelControle.SuspendLayout();
             tabPersonalizacao.SuspendLayout();
             cmOptions.SuspendLayout();
+            tabGeral.SuspendLayout();
             SuspendLayout();
             // 
             // tabDefault
             // 
             tabDefault.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabDefault.Controls.Add(tabGeral);
             tabDefault.Controls.Add(tabAudio);
             tabDefault.Controls.Add(tabPainelControle);
             tabDefault.Controls.Add(tabPersonalizacao);
@@ -110,7 +114,7 @@ namespace Windows.Configurations
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label10.Location = new Point(469, 75);
+            label10.Location = new Point(464, 82);
             label10.Name = "label10";
             label10.Size = new Size(86, 15);
             label10.TabIndex = 11;
@@ -120,7 +124,7 @@ namespace Windows.Configurations
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label9.Location = new Point(469, 5);
+            label9.Location = new Point(464, 12);
             label9.Name = "label9";
             label9.Size = new Size(48, 15);
             label9.TabIndex = 10;
@@ -129,7 +133,7 @@ namespace Windows.Configurations
             // cbAudioDeviceChangeNotification
             // 
             cbAudioDeviceChangeNotification.AutoSize = true;
-            cbAudioDeviceChangeNotification.Location = new Point(469, 94);
+            cbAudioDeviceChangeNotification.Location = new Point(464, 101);
             cbAudioDeviceChangeNotification.Name = "cbAudioDeviceChangeNotification";
             cbAudioDeviceChangeNotification.Size = new Size(241, 19);
             cbAudioDeviceChangeNotification.TabIndex = 9;
@@ -139,18 +143,18 @@ namespace Windows.Configurations
             // lvAudioRecord
             // 
             lvAudioRecord.CheckBoxes = true;
-            lvAudioRecord.Location = new Point(13, 228);
+            lvAudioRecord.Location = new Point(13, 227);
             lvAudioRecord.Name = "lvAudioRecord";
-            lvAudioRecord.Size = new Size(441, 181);
+            lvAudioRecord.Size = new Size(441, 176);
             lvAudioRecord.TabIndex = 8;
             lvAudioRecord.UseCompatibleStateImageBehavior = false;
             // 
             // lvAudioPlayback
             // 
             lvAudioPlayback.CheckBoxes = true;
-            lvAudioPlayback.Location = new Point(13, 24);
+            lvAudioPlayback.Location = new Point(13, 30);
             lvAudioPlayback.Name = "lvAudioPlayback";
-            lvAudioPlayback.Size = new Size(441, 181);
+            lvAudioPlayback.Size = new Size(441, 176);
             lvAudioPlayback.TabIndex = 0;
             lvAudioPlayback.UseCompatibleStateImageBehavior = false;
             // 
@@ -168,7 +172,7 @@ namespace Windows.Configurations
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label7.Location = new Point(13, 5);
+            label7.Location = new Point(13, 12);
             label7.Name = "label7";
             label7.Size = new Size(74, 15);
             label7.TabIndex = 7;
@@ -177,7 +181,7 @@ namespace Windows.Configurations
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(623, 23);
+            label6.Location = new Point(618, 30);
             label6.Name = "label6";
             label6.Size = new Size(56, 15);
             label6.TabIndex = 6;
@@ -185,7 +189,7 @@ namespace Windows.Configurations
             // 
             // txtDeviceRecordShortcut
             // 
-            txtDeviceRecordShortcut.Location = new Point(623, 42);
+            txtDeviceRecordShortcut.Location = new Point(618, 49);
             txtDeviceRecordShortcut.Name = "txtDeviceRecordShortcut";
             txtDeviceRecordShortcut.Size = new Size(132, 23);
             txtDeviceRecordShortcut.TabIndex = 5;
@@ -197,7 +201,7 @@ namespace Windows.Configurations
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(469, 23);
+            label5.Location = new Point(464, 30);
             label5.Name = "label5";
             label5.Size = new Size(71, 15);
             label5.TabIndex = 4;
@@ -205,7 +209,7 @@ namespace Windows.Configurations
             // 
             // txtDevicePlaybackShortcut
             // 
-            txtDevicePlaybackShortcut.Location = new Point(469, 41);
+            txtDevicePlaybackShortcut.Location = new Point(464, 48);
             txtDevicePlaybackShortcut.Name = "txtDevicePlaybackShortcut";
             txtDevicePlaybackShortcut.Size = new Size(132, 23);
             txtDevicePlaybackShortcut.TabIndex = 3;
@@ -217,7 +221,7 @@ namespace Windows.Configurations
             // cbAudioMuteOnLock
             // 
             cbAudioMuteOnLock.AutoSize = true;
-            cbAudioMuteOnLock.Location = new Point(469, 117);
+            cbAudioMuteOnLock.Location = new Point(464, 124);
             cbAudioMuteOnLock.Name = "cbAudioMuteOnLock";
             cbAudioMuteOnLock.Size = new Size(250, 19);
             cbAudioMuteOnLock.TabIndex = 2;
@@ -401,6 +405,26 @@ namespace Windows.Configurations
             sairToolStripMenuItem.Text = "Sair";
             sairToolStripMenuItem.Click += sairToolStripMenuItem_Click;
             // 
+            // tabGeral
+            // 
+            tabGeral.Controls.Add(cbGeralInitializeWindows);
+            tabGeral.Location = new Point(4, 24);
+            tabGeral.Name = "tabGeral";
+            tabGeral.Size = new Size(768, 423);
+            tabGeral.TabIndex = 3;
+            tabGeral.Text = "Geral";
+            tabGeral.UseVisualStyleBackColor = true;
+            // 
+            // cbGeralInitializeWindows
+            // 
+            cbGeralInitializeWindows.AutoSize = true;
+            cbGeralInitializeWindows.Location = new Point(13, 12);
+            cbGeralInitializeWindows.Name = "cbGeralInitializeWindows";
+            cbGeralInitializeWindows.Size = new Size(147, 19);
+            cbGeralInitializeWindows.TabIndex = 9;
+            cbGeralInitializeWindows.Text = "Iniciar com o Windows";
+            cbGeralInitializeWindows.UseVisualStyleBackColor = true;
+            // 
             // frmDefault
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -423,6 +447,8 @@ namespace Windows.Configurations
             tabPersonalizacao.ResumeLayout(false);
             tabPersonalizacao.PerformLayout();
             cmOptions.ResumeLayout(false);
+            tabGeral.ResumeLayout(false);
+            tabGeral.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -461,5 +487,7 @@ namespace Windows.Configurations
         private CheckBox cbAudioDeviceChangeNotification;
         private Label label10;
         private Label label9;
+        private TabPage tabGeral;
+        private CheckBox cbGeralInitializeWindows;
     }
 }

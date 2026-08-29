@@ -13,7 +13,9 @@ env:
   PROJECT: Windows.Configurations
 
 jobs:
-  release:
+  Release:
+    env:
+      DOTNET_VERSION: "10.0.x"
     runs-on: windows-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Define version
+      - name: Application - Version
         id: version
         shell: pwsh
         run: |
@@ -31,12 +33,12 @@ jobs:
           "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           "tag=v$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
-      - name: Setup .NET
+      - name: Dotnet - Use ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Publish
+      - name: Dotnet - Publish
         shell: pwsh
         run: |
           $publishDir = Join-Path $PWD 'publish'
@@ -57,7 +59,7 @@ jobs:
             throw "dotnet publish failed with exit code $LASTEXITCODE."
           }
 
-      - name: Install Inno Setup
+      - name: Dependency - Inno Setup (Configure)
         shell: pwsh
         run: |
           $regPaths = @(
@@ -101,12 +103,12 @@ jobs:
 
           "iscc=$isccPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Build installer
+      - name: Dependency - Inno Setup (Build Installer)
         shell: pwsh
         run: |
           $version = '${{ steps.version.outputs.version }}'
           $publishDir = (Resolve-Path 'publish').Path
-          $iss = Join-Path $PWD 'Installer\setup.iss'
+          $iss = Join-Path $PWD 'Installer\Setup.iss'
 
           & $env:iscc `
             "/DMyAppVersion=$version" `
@@ -125,7 +127,7 @@ jobs:
           "installer=$($installer.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
         id: installer
 
-      - name: Create GitHub Release
+      - name: GitHub - Create Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh

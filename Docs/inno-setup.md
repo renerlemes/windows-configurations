@@ -1,6 +1,6 @@
 # Inno Setup — download e teste local
 
-O instalador do Windows Configurations é gerado pelo [Inno Setup 6](https://jrsoftware.org/isinfo.php), a partir do script `Installer/setup.iss`. Este guia cobre a instalação da ferramenta e o teste na sua máquina, no mesmo fluxo usado pelo GitHub Action.
+O instalador do Windows Configurations é gerado pelo [Inno Setup 6](https://jrsoftware.org/isinfo.php), a partir do script `Installer/Setup.iss`. Este guia cobre a instalação da ferramenta e o teste na sua máquina, no mesmo fluxo usado pelo GitHub Action.
 
 ## Qual versão baixar
 
@@ -8,7 +8,7 @@ Use o **Inno Setup 6** (série 6.x). Não use o Inno Setup 5.
 
 1. Abra a [página de download](https://jrsoftware.org/isdl.php).
 2. Baixe o instalador **Inno Setup** (`innosetup-6.x.x.exe`). O QuickStart Pack não é necessário.
-3. Na instalação, mantenha marcado **Inno Setup Preprocessor**. O `setup.iss` usa `#define` e `#ifndef`.
+3. Na instalação, mantenha marcado **Inno Setup Preprocessor**. O `Setup.iss` usa `#define` e `#ifndef`.
 
 O compilador de linha de comando deve ficar em:
 
@@ -26,19 +26,19 @@ Abra o PowerShell na raiz do repositório (`Windows.Configurations`) e publique 
 dotnet publish Windows.Configurations.csproj -c Release -r win-x64 --self-contained true -o publish
 ```
 
-A pasta `publish\` precisa existir e conter `Windows.Configurations.exe` antes de compilador o instalador. O `setup.iss` lê essa pasta por padrão (`..\publish` relativo a `Installer\`).
+A pasta `publish\` precisa existir e conter `Windows.Configurations.exe` antes de compilador o instalador. O `Setup.iss` lê essa pasta por padrão (`..\publish` relativo a `Installer\`).
 
 ## Compilar o instalador
 
 Pela linha de comando (recomendado, igual ao CI):
 
 ```powershell
-& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion=1.0.0 Installer\setup.iss
+& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion=1.0.0 Installer\Setup.iss
 ```
 
 Pelo Inno Setup Compiler (GUI):
 
-1. Abra `Installer\setup.iss`.
+1. Abra `Installer\Setup.iss`.
 2. Compile (`Build` → `Compile`, ou Ctrl+F9).
 3. Sem `/DMyAppVersion`, a versão usada é `1.0.0` (valor padrão do script).
 

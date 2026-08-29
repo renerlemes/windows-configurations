@@ -22,5 +22,8 @@
         }
       ]
     }
+  },
+  "General": {
+    "AutoStart": true
   }
 }

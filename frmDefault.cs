@@ -7,6 +7,7 @@ using Windows.Configurations.Configuration;
 using Windows.Configurations.Configuration.Audio;
 using Windows.Configurations.Features.Audio;
 using Windows.Configurations.Features.Shortcuts;
+using Windows.Configurations.Features.Startup;
 
 namespace Windows.Configurations
 {
@@ -71,6 +72,22 @@ namespace Windows.Configurations
 
             #endregion
 
+            #region Geral
+
+            cbGeralInitializeWindows.Checked = _settings.General.AutoStart;
+
+            try
+            {
+                WindowsAutoStart.SetEnabled(cbGeralInitializeWindows.Checked);
+            }
+            catch
+            {
+            }
+
+            cbGeralInitializeWindows.CheckedChanged += cbGeralInitializeWindows_CheckedChanged;
+
+            #endregion
+
             #region Painel de Controle e Personalização (Windows Actions)
 
             foreach ((CheckBox box, IWindowsAction action) in WindowsActions())
@@ -124,6 +141,32 @@ namespace Windows.Configurations
         private void cbAudioDeviceChangeNotification_CheckedChanged(object sender, EventArgs e)
         {
             _settings.Audio.ShowNotificationOnDeviceChange = cbAudioDeviceChangeNotification.Checked;
+
+            AppConfig.Save(_settings);
+        }
+
+        private void cbGeralInitializeWindows_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                WindowsAutoStart.SetEnabled(cbGeralInitializeWindows.Checked);
+            }
+            catch (Exception ex)
+            {
+                cbGeralInitializeWindows.CheckedChanged -= cbGeralInitializeWindows_CheckedChanged;
+                cbGeralInitializeWindows.Checked = !cbGeralInitializeWindows.Checked;
+                cbGeralInitializeWindows.CheckedChanged += cbGeralInitializeWindows_CheckedChanged;
+
+                MessageBox.Show(
+                    ex.Message,
+                    "Windows Configurations",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            _settings.General.AutoStart = cbGeralInitializeWindows.Checked;
 
             AppConfig.Save(_settings);
         }
@@ -374,11 +417,10 @@ namespace Windows.Configurations
             if (!_settings.Audio.ShowNotificationOnDeviceChange)
                 return;
 
-            List<AudioDeviceEntry> devices = isPlayback
-                ? _settings.Audio.Devices.Playback
-                : _settings.Audio.Devices.Recording;
+            List<AudioDeviceEntry> devices = isPlayback ? _settings.Audio.Devices.Playback : _settings.Audio.Devices.Recording;
 
             AudioDeviceEntry device = devices.Find(entry => string.Equals(entry.Id, deviceId, StringComparison.OrdinalIgnoreCase));
+
             string name = string.IsNullOrWhiteSpace(device?.Name) ? deviceId : device.Name;
 
             notifyIcon.ShowBalloonTip(1000, isPlayback ? "Reprodução" : "Gravação", name, ToolTipIcon.Info);
