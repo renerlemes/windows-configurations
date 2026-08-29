@@ -1,0 +1,28 @@
+using System.Collections.Generic;
+
+namespace Windows.Configurations.Configuration.Audio
+{
+    public class AudioDeviceEntry
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public bool Enabled { get; set; }
+    }
+
+    public class AudioDevicesSettings
+    {
+        public string PlaybackDefault { get; set; }
+
+        public string PlaybackShortcut { get; set; }
+
+        public List<AudioDeviceEntry> Playback { get; set; } = [];
+
+        public string RecordingDefault { get; set; }
+
+        public string RecordingShortcut { get; set; }
+
+        public List<AudioDeviceEntry> Recording { get; set; } = [];
+    }
+}

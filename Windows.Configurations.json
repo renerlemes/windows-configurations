@@ -1,0 +1,26 @@
+{
+  "Audio": {
+    "MuteOnLock": true,
+    "ShowNotificationOnDeviceChange": true,
+    "Devices": {
+      "PlaybackDefault": "",
+      "PlaybackShortcut": "Ctrl \u002B F1",
+      "Playback": [
+        {
+          "Id": "",
+          "Name": "",
+          "Enabled": true
+        }
+      ],
+      "RecordingDefault": "",
+      "RecordingShortcut": "Ctrl \u002B F2",
+      "Recording": [
+        {
+          "Id": "",
+          "Name": "",
+          "Enabled": true
+        }
+      ]
+    }
+  }
+}
