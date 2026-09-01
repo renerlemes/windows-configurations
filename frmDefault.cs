@@ -20,7 +20,7 @@ namespace Windows.Configurations
         private bool _allowVisible;
         private Font _trayHeaderFont;
         private Icon _defaultTrayIcon;
-        private Icon _playbackTrayIcon;
+        private AudioDeviceIcon _playbackTrayIcon;
         private AvailableUpdate _availableUpdate;
         private bool _updateBalloon;
 
@@ -224,12 +224,12 @@ namespace Windows.Configurations
 
         private static int AddDeviceIcon(ImageList icons, string iconPath, int size)
         {
-            using Icon icon = AudioDeviceIcon.Load(iconPath, size);
+            using AudioDeviceIcon icon = AudioDeviceIcon.Load(iconPath, size);
 
             if (icon is null)
                 return -1;
 
-            icons.Images.Add(icon);
+            icons.Images.Add(icon.Icon);
 
             return icons.Images.Count - 1;
         }
@@ -560,10 +560,10 @@ namespace Windows.Configurations
             AudioDeviceEntry device = _settings.Audio.Devices.Playback.Find(entry =>
                 string.Equals(entry.Id, deviceId, StringComparison.OrdinalIgnoreCase));
 
-            Icon loaded = AudioDeviceIcon.Load(device?.IconPath, SystemInformation.SmallIconSize.Width);
-            Icon previous = _playbackTrayIcon;
+            AudioDeviceIcon loaded = AudioDeviceIcon.Load(device?.IconPath, SystemInformation.SmallIconSize.Width);
+            AudioDeviceIcon previous = _playbackTrayIcon;
 
-            notifyIcon.Icon = loaded ?? _defaultTrayIcon;
+            notifyIcon.Icon = loaded?.Icon ?? _defaultTrayIcon;
             _playbackTrayIcon = loaded;
 
             if (!string.IsNullOrWhiteSpace(device?.Name))

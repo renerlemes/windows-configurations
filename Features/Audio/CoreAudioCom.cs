@@ -92,13 +92,18 @@ namespace Windows.Configurations.Features.Audio
         public int pid;
     }
 
-    [StructLayout(LayoutKind.Explicit)]
+    /// <summary>
+    /// O layout precisa ter o tamanho exato do PROPVARIANT nativo (24 bytes em x64): declarar
+    /// menos faz o GetValue escrever além do buffer e corromper a pilha.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     internal struct PROPVARIANT
     {
-        [FieldOffset(0)]
         public ushort vt;
-
-        [FieldOffset(8)]
+        public ushort wReserved1;
+        public ushort wReserved2;
+        public ushort wReserved3;
         public IntPtr pointerValue;
+        public IntPtr unionRemainder;
     }
 }

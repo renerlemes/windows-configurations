@@ -1,18 +1,32 @@
 using System;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Windows.Configurations.Features.Audio
 {
-    internal static class AudioDeviceIcon
+    /// <summary>
+    /// Ícone extraído do endpoint, dono do HICON correspondente. Converter o handle em outro
+    /// formato (Save, ToBitmap) descarta o canal alfa e deixa o fundo preto, então o handle
+    /// original é mantido vivo enquanto o ícone estiver em uso.
+    /// </summary>
+    internal sealed class AudioDeviceIcon : IDisposable
     {
+        private IntPtr _handle;
+
+        private AudioDeviceIcon(IntPtr handle)
+        {
+            _handle = handle;
+            Icon = Icon.FromHandle(handle);
+        }
+
+        public Icon Icon { get; private set; }
+
         /// <summary>
         /// O endpoint informa o ícone no formato do Shell ("arquivo,índice"), como
         /// <c>%windir%\system32\mmres.dll,-3010</c>. Índice negativo é identificador de recurso.
         /// </summary>
-        public static Icon Load(string iconPath, int size)
+        public static AudioDeviceIcon Load(string iconPath, int size)
         {
             if (!TryParseLocation(iconPath, out string file, out int index))
                 return null;
@@ -24,16 +38,11 @@ namespace Windows.Configurations.Features.Audio
                 if (SHDefExtractIcon(file, index, 0, out handle, IntPtr.Zero, (uint)size) != 0 || handle == IntPtr.Zero)
                     return null;
 
-                using Icon extracted = Icon.FromHandle(handle);
+                AudioDeviceIcon icon = new(handle);
 
-                // Clone() apenas compartilharia o HICON, que é destruído no finally: o
-                // ícone precisa ser recriado a partir dos próprios dados para sobreviver.
-                using MemoryStream buffer = new();
+                handle = IntPtr.Zero;
 
-                extracted.Save(buffer);
-                buffer.Position = 0;
-
-                return new Icon(buffer);
+                return icon;
             }
             catch (ArgumentException)
             {
@@ -44,6 +53,18 @@ namespace Windows.Configurations.Features.Audio
                 if (handle != IntPtr.Zero)
                     DestroyIcon(handle);
             }
+        }
+
+        public void Dispose()
+        {
+            Icon?.Dispose();
+            Icon = null;
+
+            if (_handle == IntPtr.Zero)
+                return;
+
+            DestroyIcon(_handle);
+            _handle = IntPtr.Zero;
         }
 
         private static bool TryParseLocation(string iconPath, out string file, out int index)
