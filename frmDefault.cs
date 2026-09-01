@@ -8,6 +8,7 @@ using Windows.Configurations.Configuration.Audio;
 using Windows.Configurations.Features.Audio;
 using Windows.Configurations.Features.Shortcuts;
 using Windows.Configurations.Features.Startup;
+using Windows.Configurations.Updater;
 
 namespace Windows.Configurations
 {
@@ -20,15 +21,20 @@ namespace Windows.Configurations
         private Font _trayHeaderFont;
         private Icon _defaultTrayIcon;
         private Icon _playbackTrayIcon;
+        private AvailableUpdate _availableUpdate;
+        private bool _updateBalloon;
 
         public frmDefault()
         {
             InitializeComponent();
 
             LoadSettings();
+            InitTrayOptionsMenu();
 
             // Como o form nasce oculto, o handle só iria existir na primeira exibição. Sem ele, o primeiro clique no ícone seria gasto criando a janela em vez de abrir o menu
             _ = Handle;
+
+            BeginInvoke(CheckForUpdateOnStart);
         }
 
         protected override void SetVisibleCore(bool value)
@@ -356,6 +362,87 @@ namespace Windows.Configurations
                 ShowTrayMenu(cmOptions);
         }
 
+        private void InitTrayOptionsMenu()
+        {
+            _trayHeaderFont ??= new Font(cmOptions.Font, FontStyle.Bold);
+
+            lblTrayAppVersion.Font = _trayHeaderFont;
+            lblTrayAppVersion.Text = $"{Application.ProductName} ({AppVersion.CurrentDisplay})";
+            SetTrayUpdateAvailable(null);
+
+            notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
+        }
+
+        private async void CheckForUpdateOnStart()
+        {
+            try
+            {
+                AvailableUpdate update = await UpdateChecker.CheckAsync();
+
+                if (update is null || IsDisposed)
+                    return;
+
+                ApplyAvailableUpdate(update);
+            }
+            catch
+            {
+            }
+        }
+
+        private void ApplyAvailableUpdate(AvailableUpdate update)
+        {
+            _availableUpdate = update;
+            SetTrayUpdateAvailable(update.VersionDisplay);
+
+            _updateBalloon = true;
+            notifyIcon.ShowBalloonTip(
+                1000,
+                "Windows Configurations",
+                $"Atualização para Windows Configurations ({update.VersionDisplay}) está disponível",
+                ToolTipIcon.Info);
+        }
+
+        private void notifyIcon_BalloonTipClicked(object sender, EventArgs e)
+        {
+            if (_updateBalloon)
+                ShowUpdater();
+        }
+
+        /// <summary>
+        /// Exibe o item de atualização no menu da bandeja. Sem versão, o item fica oculto.
+        /// </summary>
+        private void SetTrayUpdateAvailable(string version)
+        {
+            bool available = !string.IsNullOrWhiteSpace(version);
+
+            atualizacaoDisponivelToolStripMenuItem.Visible = available;
+            atualizacaoDisponivelToolStripMenuItem.Text = available
+                ? $"Atualização disponível ({AppVersion.Format(version)})"
+                : "Atualização disponível";
+        }
+
+        private void ShowUpdater()
+        {
+            if (_availableUpdate is null)
+                return;
+
+            using frmUpdater updater = new(_availableUpdate);
+
+            updater.ShowDialog();
+        }
+
+        private void lblTrayAppVersion_Click(object sender, EventArgs e)
+        {
+            using frmAbout about = new();
+
+            about.ShowDialog();
+        }
+
+        private void atualizacaoDisponivelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowUpdater();
+        }
+
         private void configuraçõesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _allowVisible = true;
@@ -457,6 +544,7 @@ namespace Windows.Configurations
 
             string name = string.IsNullOrWhiteSpace(device?.Name) ? deviceId : device.Name;
 
+            _updateBalloon = false;
             notifyIcon.ShowBalloonTip(1000, isPlayback ? "Reprodução" : "Gravação", name, ToolTipIcon.Info);
         }
 

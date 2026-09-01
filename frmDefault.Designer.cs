@@ -63,6 +63,9 @@ namespace Windows.Configurations
             notifyIcon = new NotifyIcon(components);
             cmDevices = new ContextMenuStrip(components);
             cmOptions = new ContextMenuStrip(components);
+            lblTrayAppVersion = new ToolStripMenuItem();
+            atualizacaoDisponivelToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparatorUpdate = new ToolStripSeparator();
             configuraçõesToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             sairToolStripMenuItem = new ToolStripMenuItem();
@@ -382,9 +385,29 @@ namespace Windows.Configurations
             // 
             // cmOptions
             // 
-            cmOptions.Items.AddRange(new ToolStripItem[] { configuraçõesToolStripMenuItem, toolStripSeparator1, sairToolStripMenuItem });
+            cmOptions.Items.AddRange(new ToolStripItem[] { lblTrayAppVersion, atualizacaoDisponivelToolStripMenuItem, toolStripSeparatorUpdate, configuraçõesToolStripMenuItem, toolStripSeparator1, sairToolStripMenuItem });
             cmOptions.Name = "cmOptions";
-            cmOptions.Size = new Size(152, 54);
+            cmOptions.Size = new Size(152, 98);
+            // 
+            // lblTrayAppVersion
+            // 
+            lblTrayAppVersion.Name = "lblTrayAppVersion";
+            lblTrayAppVersion.Size = new Size(151, 22);
+            lblTrayAppVersion.Text = "Windows Configurations";
+            lblTrayAppVersion.Click += lblTrayAppVersion_Click;
+            // 
+            // atualizacaoDisponivelToolStripMenuItem
+            // 
+            atualizacaoDisponivelToolStripMenuItem.Name = "atualizacaoDisponivelToolStripMenuItem";
+            atualizacaoDisponivelToolStripMenuItem.Size = new Size(151, 22);
+            atualizacaoDisponivelToolStripMenuItem.Text = "Atualização disponível";
+            atualizacaoDisponivelToolStripMenuItem.Visible = false;
+            atualizacaoDisponivelToolStripMenuItem.Click += atualizacaoDisponivelToolStripMenuItem_Click;
+            // 
+            // toolStripSeparatorUpdate
+            // 
+            toolStripSeparatorUpdate.Name = "toolStripSeparatorUpdate";
+            toolStripSeparatorUpdate.Size = new Size(148, 6);
             // 
             // configuraçõesToolStripMenuItem
             // 
@@ -481,6 +504,9 @@ namespace Windows.Configurations
         private ListView lvAudioPlayback;
         private ContextMenuStrip cmDevices;
         private ContextMenuStrip cmOptions;
+        private ToolStripMenuItem lblTrayAppVersion;
+        private ToolStripMenuItem atualizacaoDisponivelToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparatorUpdate;
         private ToolStripMenuItem configuraçõesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem sairToolStripMenuItem;
