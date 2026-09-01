@@ -28,6 +28,7 @@ PrivilegesRequired=admin
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=..\Resources\app.ico
 CloseApplications=yes
 RestartApplications=no
 DisableProgramGroupPage=yes
@@ -48,4 +49,5 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall
+; O aplicativo exige elevação: sem shellexec o Inno usa CreateProcess e falha com "requer elevação".
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall shellexec runasoriginaluser

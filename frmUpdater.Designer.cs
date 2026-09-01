@@ -32,6 +32,7 @@
             groupBox1 = new System.Windows.Forms.GroupBox();
             txtChangelog = new System.Windows.Forms.TextBox();
             btnInstalar = new System.Windows.Forms.Button();
+            progressBar = new System.Windows.Forms.ProgressBar();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -69,11 +70,20 @@
             btnInstalar.UseVisualStyleBackColor = true;
             btnInstalar.Click += btnInstalar_Click;
             // 
+            // progressBar
+            // 
+            progressBar.Location = new System.Drawing.Point(12, 415);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new System.Drawing.Size(695, 23);
+            progressBar.TabIndex = 2;
+            progressBar.Visible = false;
+            // 
             // frmUpdater
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(800, 450);
+            Controls.Add(progressBar);
             Controls.Add(btnInstalar);
             Controls.Add(groupBox1);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -94,5 +104,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtChangelog;
         private System.Windows.Forms.Button btnInstalar;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }

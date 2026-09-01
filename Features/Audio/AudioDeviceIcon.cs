@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Windows.Configurations.Features.Audio
@@ -25,7 +26,14 @@ namespace Windows.Configurations.Features.Audio
 
                 using Icon extracted = Icon.FromHandle(handle);
 
-                return (Icon)extracted.Clone();
+                // Clone() apenas compartilharia o HICON, que é destruído no finally: o
+                // ícone precisa ser recriado a partir dos próprios dados para sobreviver.
+                using MemoryStream buffer = new();
+
+                extracted.Save(buffer);
+                buffer.Position = 0;
+
+                return new Icon(buffer);
             }
             catch (ArgumentException)
             {
