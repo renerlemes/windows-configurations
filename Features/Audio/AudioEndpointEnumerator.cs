@@ -9,6 +9,8 @@ namespace Windows.Configurations.Features.Audio
         public string Id { get; init; }
 
         public string Name { get; init; }
+
+        public string IconPath { get; init; }
     }
 
     internal static class AudioEndpointEnumerator
@@ -24,6 +26,12 @@ namespace Windows.Configurations.Features.Audio
         {
             fmtid = new Guid("a45c254e-df1c-4efd-8020-67d146a850e0"),
             pid = 14
+        };
+
+        private static readonly PROPERTYKEY PkeyDeviceClassIconPath = new()
+        {
+            fmtid = new Guid("259abffc-50a7-47ce-af08-68c9a7d73366"),
+            pid = 12
         };
 
         public static IReadOnlyList<AudioEndpoint> ListPlayback() => List(eRender);
@@ -109,35 +117,51 @@ namespace Windows.Configurations.Features.Audio
         private static AudioEndpoint ReadEndpoint(IMMDevice device)
         {
             IPropertyStore store = null;
-            PROPVARIANT variant = default;
 
             try
             {
                 device.GetId(out string id);
-                device.OpenPropertyStore(STGM_READ, out store);
-
-                PROPERTYKEY key = PkeyDeviceFriendlyName;
-                store.GetValue(ref key, out variant);
-
-                string name = variant.vt == VT_LPWSTR
-                    ? Marshal.PtrToStringUni(variant.pointerValue)
-                    : id;
 
                 if (string.IsNullOrWhiteSpace(id))
                     return null;
 
+                device.OpenPropertyStore(STGM_READ, out store);
+
+                string name = ReadString(store, PkeyDeviceFriendlyName);
+
                 return new AudioEndpoint
                 {
                     Id = id,
-                    Name = string.IsNullOrWhiteSpace(name) ? id : name
+                    Name = string.IsNullOrWhiteSpace(name) ? id : name,
+                    IconPath = ReadString(store, PkeyDeviceClassIconPath)
                 };
             }
             finally
             {
-                PropVariantClear(ref variant);
-
                 if (store != null)
                     Marshal.ReleaseComObject(store);
+            }
+        }
+
+        private static string ReadString(IPropertyStore store, PROPERTYKEY key)
+        {
+            PROPVARIANT variant = default;
+
+            try
+            {
+                store.GetValue(ref key, out variant);
+
+                return variant.vt == VT_LPWSTR
+                    ? Marshal.PtrToStringUni(variant.pointerValue)
+                    : null;
+            }
+            catch (COMException)
+            {
+                return null;
+            }
+            finally
+            {
+                PropVariantClear(ref variant);
             }
         }
 

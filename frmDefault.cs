@@ -18,6 +18,8 @@ namespace Windows.Configurations
         private AppConfiguration _settings;
         private bool _allowVisible;
         private Font _trayHeaderFont;
+        private Icon _defaultTrayIcon;
+        private Icon _playbackTrayIcon;
 
         public frmDefault()
         {
@@ -39,6 +41,8 @@ namespace Windows.Configurations
             _muteOnLockMonitor.Dispose();
             _hotkeys.Dispose();
             _trayHeaderFont?.Dispose();
+            RestoreDefaultTrayIcon();
+            _playbackTrayIcon?.Dispose();
 
             base.OnFormClosed(e);
         }
@@ -69,6 +73,7 @@ namespace Windows.Configurations
             txtDeviceRecordShortcut.Text = _settings.Audio.Devices.RecordingShortcut;
 
             RefreshHotkeys();
+            ApplyPlaybackTrayIcon();
 
             #endregion
 
@@ -185,16 +190,42 @@ namespace Windows.Configurations
             if (list.Columns.Count == 0)
                 list.Columns.Add(string.Empty, list.ClientSize.Width - 4);
 
+            ImageList previousIcons = list.SmallImageList;
+            int size = 32 * list.DeviceDpi / 96;
+
+            ImageList icons = new()
+            {
+                ColorDepth = ColorDepth.Depth32Bit,
+                ImageSize = new Size(size, size)
+            };
+
+            list.SmallImageList = icons;
+
             foreach (AudioDeviceEntry device in devices)
             {
                 list.Items.Add(new ListViewItem(device.Name)
                 {
                     Tag = device.Id,
-                    Checked = device.Enabled
+                    Checked = device.Enabled,
+                    ImageIndex = AddDeviceIcon(icons, device.IconPath, size)
                 });
             }
 
             list.EndUpdate();
+
+            previousIcons?.Dispose();
+        }
+
+        private static int AddDeviceIcon(ImageList icons, string iconPath, int size)
+        {
+            using Icon icon = AudioDeviceIcon.Load(iconPath, size);
+
+            if (icon is null)
+                return -1;
+
+            icons.Images.Add(icon);
+
+            return icons.Images.Count - 1;
         }
 
         private void lvAudioPlayback_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -407,6 +438,9 @@ namespace Windows.Configurations
 
             AppConfig.Save(_settings);
 
+            if (isPlayback)
+                ApplyPlaybackTrayIcon();
+
             ShowDeviceChangeNotification(deviceId, isPlayback);
 
             return true;
@@ -424,6 +458,38 @@ namespace Windows.Configurations
             string name = string.IsNullOrWhiteSpace(device?.Name) ? deviceId : device.Name;
 
             notifyIcon.ShowBalloonTip(1000, isPlayback ? "Reprodução" : "Gravação", name, ToolTipIcon.Info);
+        }
+
+        private void ApplyPlaybackTrayIcon()
+        {
+            _defaultTrayIcon ??= notifyIcon.Icon;
+
+            string deviceId = _settings.Audio.Devices.PlaybackDefault;
+
+            if (string.IsNullOrEmpty(deviceId))
+                deviceId = AudioEndpointEnumerator.GetDefaultPlaybackId();
+
+            AudioDeviceEntry device = _settings.Audio.Devices.Playback.Find(entry =>
+                string.Equals(entry.Id, deviceId, StringComparison.OrdinalIgnoreCase));
+
+            Icon loaded = AudioDeviceIcon.Load(device?.IconPath, SystemInformation.SmallIconSize.Width);
+            Icon previous = _playbackTrayIcon;
+
+            notifyIcon.Icon = loaded ?? _defaultTrayIcon;
+            _playbackTrayIcon = loaded;
+
+            if (!string.IsNullOrWhiteSpace(device?.Name))
+                notifyIcon.Text = device.Name.Length <= 63 ? device.Name : device.Name[..63];
+            else
+                notifyIcon.Text = "Windows Configurations";
+
+            previous?.Dispose();
+        }
+
+        private void RestoreDefaultTrayIcon()
+        {
+            if (_defaultTrayIcon is not null)
+                notifyIcon.Icon = _defaultTrayIcon;
         }
 
         private void ShowTrayMenu(ContextMenuStrip menu)

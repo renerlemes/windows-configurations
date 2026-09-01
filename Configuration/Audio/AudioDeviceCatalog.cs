@@ -51,7 +51,8 @@ namespace Windows.Configurations.Configuration.Audio
                 {
                     Id = endpoint.Id,
                     Name = endpoint.Name,
-                    Enabled = enabledById.TryGetValue(endpoint.Id, out bool enabled) && enabled
+                    Enabled = enabledById.TryGetValue(endpoint.Id, out bool enabled) && enabled,
+                    IconPath = endpoint.IconPath
                 });
             }
 

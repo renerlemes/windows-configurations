@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Windows.Configurations.Configuration.Audio
 {
@@ -9,6 +10,12 @@ namespace Windows.Configurations.Configuration.Audio
         public string Name { get; set; }
 
         public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Resolvido a cada enumeração, junto do dispositivo: não é persistido.
+        /// </summary>
+        [JsonIgnore]
+        public string IconPath { get; set; }
     }
 
     public class AudioDevicesSettings
