@@ -16,6 +16,8 @@ namespace Windows.Configurations
     {
         private readonly MuteOnLockMonitor _muteOnLockMonitor = new();
         private readonly HotkeyManager _hotkeys = new();
+        private readonly AudioDeviceWatcher _deviceWatcher = new();
+        private readonly System.Windows.Forms.Timer _deviceRefreshDelay = new() { Interval = 500 };
         private AppConfiguration _settings;
         private bool _allowVisible;
         private Font _trayHeaderFont;
@@ -34,6 +36,8 @@ namespace Windows.Configurations
             // Como o form nasce oculto, o handle só iria existir na primeira exibição. Sem ele, o primeiro clique no ícone seria gasto criando a janela em vez de abrir o menu
             _ = Handle;
 
+            StartDeviceWatcher();
+
             BeginInvoke(CheckForUpdateOnStart);
         }
 
@@ -46,6 +50,8 @@ namespace Windows.Configurations
         {
             _muteOnLockMonitor.Dispose();
             _hotkeys.Dispose();
+            _deviceWatcher.Dispose();
+            _deviceRefreshDelay.Dispose();
             _trayHeaderFont?.Dispose();
             RestoreDefaultTrayIcon();
             _playbackTrayIcon?.Dispose();
@@ -182,6 +188,51 @@ namespace Windows.Configurations
             AppConfig.Save(_settings);
         }
 
+        private void StartDeviceWatcher()
+        {
+            _deviceRefreshDelay.Tick += deviceRefreshDelay_Tick;
+            _deviceWatcher.Changed += OnAudioDevicesChanged;
+            _deviceWatcher.Start();
+        }
+
+        private void OnAudioDevicesChanged()
+        {
+            if (IsDisposed || !IsHandleCreated)
+                return;
+
+            try
+            {
+                // A notificação vem de uma thread do COM e costuma chegar em rajada: o timer
+                // devolve o trabalho para a thread da interface e agrupa os eventos em uma leitura só.
+                BeginInvoke(() =>
+                {
+                    _deviceRefreshDelay.Stop();
+                    _deviceRefreshDelay.Start();
+                });
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or ObjectDisposedException)
+            {
+                // O form foi encerrado entre a checagem e o BeginInvoke.
+            }
+        }
+
+        private void deviceRefreshDelay_Tick(object sender, EventArgs e)
+        {
+            _deviceRefreshDelay.Stop();
+
+            RefreshAudioDevices();
+        }
+
+        private void RefreshAudioDevices()
+        {
+            AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
+
+            lvAudioDeviceList(lvAudioPlayback, _settings.Audio.Devices.Playback);
+            lvAudioDeviceList(lvAudioRecord, _settings.Audio.Devices.Recording);
+
+            ApplyPlaybackTrayIcon();
+        }
+
         private static void lvAudioDeviceList(ListView list, List<AudioDeviceEntry> devices)
         {
             list.BeginUpdate();
@@ -209,6 +260,9 @@ namespace Windows.Configurations
 
             foreach (AudioDeviceEntry device in devices)
             {
+                if (!device.Connected)
+                    continue;
+
                 list.Items.Add(new ListViewItem(device.Name)
                 {
                     Tag = device.Id,
@@ -331,9 +385,11 @@ namespace Windows.Configurations
 
         private void CycleDefaultDevice(bool isPlayback)
         {
+            AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
+
             List<AudioDeviceEntry> devices = isPlayback
-                ? _settings.Audio.Devices.Playback.FindAll(device => device.Enabled)
-                : _settings.Audio.Devices.Recording.FindAll(device => device.Enabled);
+                ? _settings.Audio.Devices.Playback.FindAll(device => device.Enabled && device.Connected)
+                : _settings.Audio.Devices.Recording.FindAll(device => device.Enabled && device.Connected);
 
             if (devices.Count == 0)
                 return;
@@ -449,6 +505,8 @@ namespace Windows.Configurations
 
             ShowInTaskbar = true;
 
+            RefreshAudioDevices();
+
             Show();
 
             Activate();
@@ -467,8 +525,12 @@ namespace Windows.Configurations
 
             cmDevices.Items.Clear();
 
-            List<AudioDeviceEntry> playback = _settings.Audio.Devices.Playback.FindAll(device => device.Enabled);
-            List<AudioDeviceEntry> recording = _settings.Audio.Devices.Recording.FindAll(device => device.Enabled);
+            AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
+
+            ApplyPlaybackTrayIcon();
+
+            List<AudioDeviceEntry> playback = _settings.Audio.Devices.Playback.FindAll(device => device.Enabled && device.Connected);
+            List<AudioDeviceEntry> recording = _settings.Audio.Devices.Recording.FindAll(device => device.Enabled && device.Connected);
 
             string playbackDefault = AudioEndpointEnumerator.GetDefaultPlaybackId();
             string recordingDefault = AudioEndpointEnumerator.GetDefaultRecordingId();
@@ -552,10 +614,12 @@ namespace Windows.Configurations
         {
             _defaultTrayIcon ??= notifyIcon.Icon;
 
-            string deviceId = _settings.Audio.Devices.PlaybackDefault;
+            // O padrão real do Windows vem primeiro: assim o ícone acompanha também as trocas
+            // feitas fora do app, como a que o próprio sistema faz ao desconectar um fone.
+            string deviceId = AudioEndpointEnumerator.GetDefaultPlaybackId();
 
             if (string.IsNullOrEmpty(deviceId))
-                deviceId = AudioEndpointEnumerator.GetDefaultPlaybackId();
+                deviceId = _settings.Audio.Devices.PlaybackDefault;
 
             AudioDeviceEntry device = _settings.Audio.Devices.Playback.Find(entry =>
                 string.Equals(entry.Id, deviceId, StringComparison.OrdinalIgnoreCase));

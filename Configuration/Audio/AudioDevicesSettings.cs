@@ -16,6 +16,13 @@ namespace Windows.Configurations.Configuration.Audio
         /// </summary>
         [JsonIgnore]
         public string IconPath { get; set; }
+
+        /// <summary>
+        /// Indica se o dispositivo está presente e ativo agora. Um fone desconectado continua
+        /// salvo, para não perder a marcação, mas deixa de ser exibido.
+        /// </summary>
+        [JsonIgnore]
+        public bool Connected { get; set; }
     }
 
     public class AudioDevicesSettings

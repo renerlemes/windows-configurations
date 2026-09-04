@@ -17,6 +17,28 @@ namespace Windows.Configurations.Features.Audio
         int EnumAudioEndpoints(int dataFlow, int dwStateMask, out IMMDeviceCollection ppDevices);
 
         int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice ppDevice);
+
+        int GetDevice([MarshalAs(UnmanagedType.LPWStr)] string pwstrId, out IMMDevice ppDevice);
+
+        int RegisterEndpointNotificationCallback(IMMNotificationClient pClient);
+
+        int UnregisterEndpointNotificationCallback(IMMNotificationClient pClient);
+    }
+
+    [ComImport]
+    [Guid("7991EEC9-7E89-4D85-8390-6C703CEC60C0")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    internal interface IMMNotificationClient
+    {
+        void OnDeviceStateChanged([MarshalAs(UnmanagedType.LPWStr)] string pwstrDeviceId, int dwNewState);
+
+        void OnDeviceAdded([MarshalAs(UnmanagedType.LPWStr)] string pwstrDeviceId);
+
+        void OnDeviceRemoved([MarshalAs(UnmanagedType.LPWStr)] string pwstrDeviceId);
+
+        void OnDefaultDeviceChanged(int flow, int role, [MarshalAs(UnmanagedType.LPWStr)] string pwstrDefaultDeviceId);
+
+        void OnPropertyValueChanged([MarshalAs(UnmanagedType.LPWStr)] string pwstrDeviceId, PROPERTYKEY key);
     }
 
     [ComImport]
