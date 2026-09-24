@@ -14,6 +14,8 @@ namespace Windows.Configurations.Features.Personalizacao
 
         public string Description => "Oculta Pesquisa e desativa Visão de tarefas, Widgets e Continuar";
 
+        public bool RequiresElevation => false;
+
         public bool Get()
         {
             return ReadDword(SearchPath, "SearchboxTaskbarMode", 1) == 0

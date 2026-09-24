@@ -27,6 +27,8 @@ namespace Windows.Configurations.Features.PainelControle
 
         public string Description => "Desliga o vídeo e suspende o computador: Nunca (bateria e conectado)";
 
+        public bool RequiresElevation => true;
+
         public bool Get()
         {
             if (!TryReadSetting(VideoSubGuid, VideoIdleGuid, out int videoAc, out int videoDc))

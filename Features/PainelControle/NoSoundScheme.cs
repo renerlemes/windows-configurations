@@ -15,6 +15,8 @@ namespace Windows.Configurations.Features.PainelControle
 
         public string Description => "Define o esquema de som como Nenhum som";
 
+        public bool RequiresElevation => false;
+
         public bool Get()
         {
             using RegistryKey key = Registry.CurrentUser.OpenSubKey(SchemesPath);

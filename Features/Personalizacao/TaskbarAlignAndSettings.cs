@@ -13,6 +13,8 @@ namespace Windows.Configurations.Features.Personalizacao
 
         public string Description => "Alinha a barra à esquerda e aplica os comportamentos configurados";
 
+        public bool RequiresElevation => false;
+
         public bool Get()
         {
             return ReadDword("TaskbarAl", 1) == 0

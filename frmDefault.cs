@@ -26,6 +26,14 @@ namespace Windows.Configurations
         private AvailableUpdate _availableUpdate;
         private bool _updateBalloon;
 
+        private static string ElevationHintText => ElevatedAction.IsElevated
+            ? "Requer privilégio de administrador. O aplicativo já está elevado: a alteração é aplicada direto."
+            : "Requer privilégio de administrador. O Windows vai pedir confirmação ao marcar ou desmarcar esta opção.";
+
+        private readonly ToolTip _elevationTip = new() { InitialDelay = 300, ShowAlways = true };
+        private readonly List<PictureBox> _elevationHints = [];
+        private Icon _elevationIcon;
+
         public frmDefault()
         {
             InitializeComponent();
@@ -55,6 +63,12 @@ namespace Windows.Configurations
             _trayHeaderFont?.Dispose();
             RestoreDefaultTrayIcon();
             _playbackTrayIcon?.Dispose();
+
+            foreach (PictureBox hint in _elevationHints)
+                hint.Image?.Dispose();
+
+            _elevationIcon?.Dispose();
+            _elevationTip.Dispose();
 
             base.OnFormClosed(e);
         }
@@ -114,6 +128,8 @@ namespace Windows.Configurations
             foreach ((CheckBox box, IWindowsAction action) in WindowsActions())
                 ActionBinding.Bind(box, action);
 
+            ShowElevationHints();
+
             #endregion
         }
 
@@ -129,6 +145,56 @@ namespace Windows.Configurations
 
                 Hide();
             }
+        }
+
+        /// <summary>
+        /// Marca com um ícone de informação as opções que exigem administrador, para o
+        /// usuário saber antes de tentar que o Windows vai pedir confirmação.
+        /// </summary>
+        private void ShowElevationHints()
+        {
+            foreach ((CheckBox box, IWindowsAction action) in WindowsActions())
+            {
+                if (!action.RequiresElevation)
+                    continue;
+
+                AddElevationHint(box);
+            }
+        }
+
+        private void AddElevationHint(CheckBox box)
+        {
+            int size = 16 * box.DeviceDpi / 96;
+
+            _elevationIcon ??= new Icon(SystemIcons.Information, size, size);
+
+            PictureBox hint = new()
+            {
+                Image = _elevationIcon.ToBitmap(),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Size = new Size(size, size),
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Help
+            };
+
+            box.Parent.Controls.Add(hint);
+            hint.BringToFront();
+
+            _elevationTip.SetToolTip(hint, ElevationHintText);
+            _elevationTip.SetToolTip(box, ElevationHintText);
+
+            _elevationHints.Add(hint);
+
+            // O checkbox é AutoSize: a largura final do texto só existe depois do layout
+            // e muda junto com a DPI, então o ícone acompanha em vez de usar posição fixa.
+            void Place() => hint.Location = new Point(
+                box.Left + box.PreferredSize.Width + 6,
+                box.Top + ((box.Height - hint.Height) / 2));
+
+            Place();
+
+            box.SizeChanged += (_, _) => Place();
+            box.LocationChanged += (_, _) => Place();
         }
 
         private (CheckBox Box, IWindowsAction Action)[] WindowsActions()

@@ -5,7 +5,13 @@
 	<trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
 		<security>
 			<requestedPrivileges>
-				<requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+				<!--
+				O uso principal é áudio e bandeja, que não precisa de privilégio. Elevar o
+				processo inteiro impediria a inicialização com o Windows em máquina gerenciada,
+				onde o usuário não é administrador local. As poucas ações que gravam em HKLM
+				sobem uma instância elevada só para elas.
+				-->
+				<requestedExecutionLevel level="asInvoker" uiAccess="false" />
 			</requestedPrivileges>
 		</security>
 	</trustInfo>

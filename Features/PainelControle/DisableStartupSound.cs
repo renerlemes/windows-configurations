@@ -18,6 +18,8 @@ namespace Windows.Configurations.Features.PainelControle
 
         public string Description => "Não tocar o som na inicialização do Windows";
 
+        public bool RequiresElevation => true;
+
         public bool Get()
         {
             using RegistryKey key = Registry.LocalMachine.OpenSubKey(BootAnimationPath);

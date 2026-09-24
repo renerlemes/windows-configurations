@@ -49,5 +49,5 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-; O aplicativo exige elevação: sem shellexec o Inno usa CreateProcess e falha com "requer elevação".
+; O instalador roda elevado, o aplicativo não: runasoriginaluser o inicia como o usuário logado.
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall shellexec runasoriginaluser

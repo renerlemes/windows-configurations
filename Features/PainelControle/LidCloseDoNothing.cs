@@ -18,6 +18,8 @@ namespace Windows.Configurations.Features.PainelControle
 
         public string Description => "Ao fechar a tampa, não faz nada (bateria e conectado)";
 
+        public bool RequiresElevation => true;
+
         public bool Get()
         {
             if (!TryReadLidAction(out int ac, out int dc))

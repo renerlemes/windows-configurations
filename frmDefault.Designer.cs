@@ -34,6 +34,8 @@ namespace Windows.Configurations
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDefault));
             tabDefault = new TabControl();
+            tabGeral = new TabPage();
+            cbGeralInitializeWindows = new CheckBox();
             tabAudio = new TabPage();
             label10 = new Label();
             label9 = new Label();
@@ -69,14 +71,12 @@ namespace Windows.Configurations
             configuraçõesToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             sairToolStripMenuItem = new ToolStripMenuItem();
-            tabGeral = new TabPage();
-            cbGeralInitializeWindows = new CheckBox();
             tabDefault.SuspendLayout();
+            tabGeral.SuspendLayout();
             tabAudio.SuspendLayout();
             tabPainelControle.SuspendLayout();
             tabPersonalizacao.SuspendLayout();
             cmOptions.SuspendLayout();
-            tabGeral.SuspendLayout();
             SuspendLayout();
             // 
             // tabDefault
@@ -91,6 +91,26 @@ namespace Windows.Configurations
             tabDefault.SelectedIndex = 0;
             tabDefault.Size = new Size(776, 451);
             tabDefault.TabIndex = 0;
+            // 
+            // tabGeral
+            // 
+            tabGeral.Controls.Add(cbGeralInitializeWindows);
+            tabGeral.Location = new Point(4, 24);
+            tabGeral.Name = "tabGeral";
+            tabGeral.Size = new Size(768, 423);
+            tabGeral.TabIndex = 3;
+            tabGeral.Text = "Geral";
+            tabGeral.UseVisualStyleBackColor = true;
+            // 
+            // cbGeralInitializeWindows
+            // 
+            cbGeralInitializeWindows.AutoSize = true;
+            cbGeralInitializeWindows.Location = new Point(13, 12);
+            cbGeralInitializeWindows.Name = "cbGeralInitializeWindows";
+            cbGeralInitializeWindows.Size = new Size(147, 19);
+            cbGeralInitializeWindows.TabIndex = 9;
+            cbGeralInitializeWindows.Text = "Iniciar com o Windows";
+            cbGeralInitializeWindows.UseVisualStyleBackColor = true;
             // 
             // tabAudio
             // 
@@ -387,19 +407,19 @@ namespace Windows.Configurations
             // 
             cmOptions.Items.AddRange(new ToolStripItem[] { lblTrayAppVersion, atualizacaoDisponivelToolStripMenuItem, toolStripSeparatorUpdate, configuraçõesToolStripMenuItem, toolStripSeparator1, sairToolStripMenuItem });
             cmOptions.Name = "cmOptions";
-            cmOptions.Size = new Size(152, 98);
+            cmOptions.Size = new Size(206, 104);
             // 
             // lblTrayAppVersion
             // 
             lblTrayAppVersion.Name = "lblTrayAppVersion";
-            lblTrayAppVersion.Size = new Size(151, 22);
+            lblTrayAppVersion.Size = new Size(205, 22);
             lblTrayAppVersion.Text = "Windows Configurations";
             lblTrayAppVersion.Click += lblTrayAppVersion_Click;
             // 
             // atualizacaoDisponivelToolStripMenuItem
             // 
             atualizacaoDisponivelToolStripMenuItem.Name = "atualizacaoDisponivelToolStripMenuItem";
-            atualizacaoDisponivelToolStripMenuItem.Size = new Size(151, 22);
+            atualizacaoDisponivelToolStripMenuItem.Size = new Size(205, 22);
             atualizacaoDisponivelToolStripMenuItem.Text = "Atualização disponível";
             atualizacaoDisponivelToolStripMenuItem.Visible = false;
             atualizacaoDisponivelToolStripMenuItem.Click += atualizacaoDisponivelToolStripMenuItem_Click;
@@ -407,46 +427,26 @@ namespace Windows.Configurations
             // toolStripSeparatorUpdate
             // 
             toolStripSeparatorUpdate.Name = "toolStripSeparatorUpdate";
-            toolStripSeparatorUpdate.Size = new Size(148, 6);
+            toolStripSeparatorUpdate.Size = new Size(202, 6);
             // 
             // configuraçõesToolStripMenuItem
             // 
             configuraçõesToolStripMenuItem.Name = "configuraçõesToolStripMenuItem";
-            configuraçõesToolStripMenuItem.Size = new Size(151, 22);
+            configuraçõesToolStripMenuItem.Size = new Size(205, 22);
             configuraçõesToolStripMenuItem.Text = "Configurações";
             configuraçõesToolStripMenuItem.Click += configuraçõesToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(148, 6);
+            toolStripSeparator1.Size = new Size(202, 6);
             // 
             // sairToolStripMenuItem
             // 
             sairToolStripMenuItem.Name = "sairToolStripMenuItem";
-            sairToolStripMenuItem.Size = new Size(151, 22);
+            sairToolStripMenuItem.Size = new Size(205, 22);
             sairToolStripMenuItem.Text = "Sair";
             sairToolStripMenuItem.Click += sairToolStripMenuItem_Click;
-            // 
-            // tabGeral
-            // 
-            tabGeral.Controls.Add(cbGeralInitializeWindows);
-            tabGeral.Location = new Point(4, 24);
-            tabGeral.Name = "tabGeral";
-            tabGeral.Size = new Size(768, 423);
-            tabGeral.TabIndex = 3;
-            tabGeral.Text = "Geral";
-            tabGeral.UseVisualStyleBackColor = true;
-            // 
-            // cbGeralInitializeWindows
-            // 
-            cbGeralInitializeWindows.AutoSize = true;
-            cbGeralInitializeWindows.Location = new Point(13, 12);
-            cbGeralInitializeWindows.Name = "cbGeralInitializeWindows";
-            cbGeralInitializeWindows.Size = new Size(147, 19);
-            cbGeralInitializeWindows.TabIndex = 9;
-            cbGeralInitializeWindows.Text = "Iniciar com o Windows";
-            cbGeralInitializeWindows.UseVisualStyleBackColor = true;
             // 
             // frmDefault
             // 
@@ -463,6 +463,8 @@ namespace Windows.Configurations
             Text = "Windows Configurations";
             FormClosing += frmDefault_FormClosing;
             tabDefault.ResumeLayout(false);
+            tabGeral.ResumeLayout(false);
+            tabGeral.PerformLayout();
             tabAudio.ResumeLayout(false);
             tabAudio.PerformLayout();
             tabPainelControle.ResumeLayout(false);
@@ -470,8 +472,6 @@ namespace Windows.Configurations
             tabPersonalizacao.ResumeLayout(false);
             tabPersonalizacao.PerformLayout();
             cmOptions.ResumeLayout(false);
-            tabGeral.ResumeLayout(false);
-            tabGeral.PerformLayout();
             ResumeLayout(false);
         }
 

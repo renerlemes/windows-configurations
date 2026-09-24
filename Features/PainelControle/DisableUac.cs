@@ -17,6 +17,8 @@ namespace Windows.Configurations.Features.PainelControle
 
         public string Description => "Define o Controle de Conta de Usuário como Nunca notificar";
 
+        public bool RequiresElevation => true;
+
         public void Execute()
         {
             using RegistryKey key = Registry.LocalMachine.OpenSubKey(RegistryPath, true);
