@@ -73,6 +73,7 @@ namespace Windows.Configurations
             cbAudioDeviceChangeNotification.CheckedChanged += cbAudioDeviceChangeNotification_CheckedChanged;
 
             AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
+            ApplyPreferredDevices();
             AppConfig.Save(_settings);
 
             lvAudioDeviceList(lvAudioPlayback, _settings.Audio.Devices.Playback);
@@ -226,11 +227,86 @@ namespace Windows.Configurations
         private void RefreshAudioDevices()
         {
             AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
+            ApplyPreferredDevices();
 
             lvAudioDeviceList(lvAudioPlayback, _settings.Audio.Devices.Playback);
             lvAudioDeviceList(lvAudioRecord, _settings.Audio.Devices.Recording);
 
             ApplyPlaybackTrayIcon();
+        }
+
+        /// <summary>
+        /// Preferido conectado: volta para ele. Preferido desconectado: o próximo marcado
+        /// e conectado na lista. A troca automática não altera PlaybackDefault/RecordingDefault.
+        /// </summary>
+        private void ApplyPreferredDevices()
+        {
+            ApplyPreferredDevice(isPlayback: true);
+            ApplyPreferredDevice(isPlayback: false);
+        }
+
+        private void ApplyPreferredDevice(bool isPlayback)
+        {
+            List<AudioDeviceEntry> devices = isPlayback
+                ? _settings.Audio.Devices.Playback
+                : _settings.Audio.Devices.Recording;
+
+            string preferredId = isPlayback
+                ? _settings.Audio.Devices.PlaybackDefault
+                : _settings.Audio.Devices.RecordingDefault;
+
+            if (string.IsNullOrEmpty(preferredId))
+                return;
+
+            string currentId = isPlayback
+                ? AudioEndpointEnumerator.GetDefaultPlaybackId()
+                : AudioEndpointEnumerator.GetDefaultRecordingId();
+
+            AudioDeviceEntry preferred = devices.Find(entry =>
+                string.Equals(entry.Id, preferredId, StringComparison.OrdinalIgnoreCase));
+
+            if (preferred is { Enabled: true, Connected: true })
+            {
+                if (!string.Equals(currentId, preferred.Id, StringComparison.OrdinalIgnoreCase))
+                    SetWindowsDefault(preferred.Id, isPlayback, updatePreferred: false);
+
+                return;
+            }
+
+            if (preferred is null || !preferred.Enabled)
+                return;
+
+            string fallbackId = NextEnabledConnected(devices, preferredId);
+
+            if (string.IsNullOrEmpty(fallbackId)
+                || string.Equals(currentId, fallbackId, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            SetWindowsDefault(fallbackId, isPlayback, updatePreferred: false);
+        }
+
+        /// <summary>
+        /// Mesma ordem da lista marcada: o próximo habilitado e conectado depois do âncora.
+        /// </summary>
+        private static string NextEnabledConnected(List<AudioDeviceEntry> devices, string afterId)
+        {
+            List<AudioDeviceEntry> enabled = devices.FindAll(device => device.Enabled);
+
+            int index = enabled.FindIndex(device =>
+                string.Equals(device.Id, afterId, StringComparison.OrdinalIgnoreCase));
+
+            if (index < 0 || enabled.Count < 2)
+                return null;
+
+            for (int offset = 1; offset < enabled.Count; offset++)
+            {
+                AudioDeviceEntry candidate = enabled[(index + offset) % enabled.Count];
+
+                if (candidate.Connected)
+                    return candidate.Id;
+            }
+
+            return null;
         }
 
         private static void lvAudioDeviceList(ListView list, List<AudioDeviceEntry> devices)
@@ -577,15 +653,23 @@ namespace Windows.Configurations
 
         private bool SetTrayDefaultDevice(string deviceId, bool isPlayback)
         {
+            return SetWindowsDefault(deviceId, isPlayback, updatePreferred: true);
+        }
+
+        private bool SetWindowsDefault(string deviceId, bool isPlayback, bool updatePreferred)
+        {
             if (!AudioDefaultDevice.SetDefault(deviceId))
                 return false;
 
-            if (isPlayback)
-                _settings.Audio.Devices.PlaybackDefault = deviceId;
-            else
-                _settings.Audio.Devices.RecordingDefault = deviceId;
+            if (updatePreferred)
+            {
+                if (isPlayback)
+                    _settings.Audio.Devices.PlaybackDefault = deviceId;
+                else
+                    _settings.Audio.Devices.RecordingDefault = deviceId;
 
-            AppConfig.Save(_settings);
+                AppConfig.Save(_settings);
+            }
 
             if (isPlayback)
                 ApplyPlaybackTrayIcon();

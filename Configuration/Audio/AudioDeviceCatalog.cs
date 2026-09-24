@@ -10,22 +10,14 @@ namespace Windows.Configurations.Configuration.Audio
             devices.Playback = Merge(devices.Playback, AudioEndpointEnumerator.ListPlayback());
             devices.Recording = Merge(devices.Recording, AudioEndpointEnumerator.ListRecording());
 
-            string playbackDefault = AudioEndpointEnumerator.GetDefaultPlaybackId();
-            string recordingDefault = AudioEndpointEnumerator.GetDefaultRecordingId();
+            // PlaybackDefault / RecordingDefault são a última escolha do usuário.
+            // Só preenche na primeira vez: um fallback do Windows (fone desconectado)
+            // não pode apagar o preferido, senão a restauração na reconexão some.
+            if (string.IsNullOrEmpty(devices.PlaybackDefault))
+                devices.PlaybackDefault = AudioEndpointEnumerator.GetDefaultPlaybackId();
 
-            if (!string.IsNullOrEmpty(playbackDefault)
-                && (string.IsNullOrEmpty(devices.PlaybackDefault)
-                    || !devices.Playback.Exists(entry => entry.Connected && entry.Id == devices.PlaybackDefault)))
-            {
-                devices.PlaybackDefault = playbackDefault;
-            }
-
-            if (!string.IsNullOrEmpty(recordingDefault)
-                && (string.IsNullOrEmpty(devices.RecordingDefault)
-                    || !devices.Recording.Exists(entry => entry.Connected && entry.Id == devices.RecordingDefault)))
-            {
-                devices.RecordingDefault = recordingDefault;
-            }
+            if (string.IsNullOrEmpty(devices.RecordingDefault))
+                devices.RecordingDefault = AudioEndpointEnumerator.GetDefaultRecordingId();
         }
 
         private static List<AudioDeviceEntry> Merge(List<AudioDeviceEntry> saved, IReadOnlyList<AudioEndpoint> live)

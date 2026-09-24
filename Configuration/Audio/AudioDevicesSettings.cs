@@ -27,12 +27,20 @@ namespace Windows.Configurations.Configuration.Audio
 
     public class AudioDevicesSettings
     {
+        /// <summary>
+        /// Última escolha do usuário. Mantido mesmo se o dispositivo desconectar, para
+        /// restaurá-lo ao reconectar; o fallback automático não altera este valor.
+        /// </summary>
         public string PlaybackDefault { get; set; }
 
         public string PlaybackShortcut { get; set; }
 
         public List<AudioDeviceEntry> Playback { get; set; } = [];
 
+        /// <summary>
+        /// Última escolha do usuário. Mantido mesmo se o dispositivo desconectar, para
+        /// restaurá-lo ao reconectar; o fallback automático não altera este valor.
+        /// </summary>
         public string RecordingDefault { get; set; }
 
         public string RecordingShortcut { get; set; }
