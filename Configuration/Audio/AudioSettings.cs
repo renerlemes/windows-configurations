@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace SoundSwitch.Configuration.Audio
 {
     public class AudioSettings

@@ -7,9 +7,6 @@ namespace SoundSwitch.Updater
         [JsonPropertyName("tag_name")]
         public string TagName { get; set; }
 
-        [JsonPropertyName("body")]
-        public string Body { get; set; }
-
         [JsonPropertyName("prerelease")]
         public bool Prerelease { get; set; }
 

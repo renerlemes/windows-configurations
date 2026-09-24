@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -46,5 +47,38 @@ namespace SoundSwitch.Configuration.Audio
         public string RecordingShortcut { get; set; }
 
         public List<AudioDeviceEntry> Recording { get; set; } = [];
+
+        public List<AudioDeviceEntry> Devices(bool playback) => playback ? Playback : Recording;
+
+        public string PreferredId(bool playback) => playback ? PlaybackDefault : RecordingDefault;
+
+        public void SetPreferredId(bool playback, string id)
+        {
+            if (playback)
+                PlaybackDefault = id;
+            else
+                RecordingDefault = id;
+        }
+
+        public string Shortcut(bool playback) => playback ? PlaybackShortcut : RecordingShortcut;
+
+        public void SetShortcut(bool playback, string shortcut)
+        {
+            if (playback)
+                PlaybackShortcut = shortcut;
+            else
+                RecordingShortcut = shortcut;
+        }
+
+        public List<AudioDeviceEntry> EnabledConnected(bool playback)
+        {
+            return Devices(playback).FindAll(device => device.Enabled && device.Connected);
+        }
+
+        public AudioDeviceEntry FindById(bool playback, string id)
+        {
+            return Devices(playback).Find(entry =>
+                string.Equals(entry.Id, id, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }

@@ -42,6 +42,8 @@ namespace SoundSwitch.Features.Audio
 
         public static string GetDefaultRecordingId() => GetDefaultId(eCapture);
 
+        public static string GetDefaultId(bool playback) => GetDefaultId(playback ? eRender : eCapture);
+
         private static IReadOnlyList<AudioEndpoint> List(int dataFlow)
         {
             List<AudioEndpoint> result = [];

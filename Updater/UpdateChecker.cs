@@ -37,7 +37,6 @@ namespace SoundSwitch.Updater
             return new AvailableUpdate
             {
                 VersionDisplay = AppVersion.Format(release.TagName),
-                Changelog = release.Body?.Trim(),
                 FileName = asset.Name,
                 DownloadUrl = asset.BrowserDownloadUrl
             };

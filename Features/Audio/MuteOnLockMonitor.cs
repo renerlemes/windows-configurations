@@ -7,7 +7,7 @@ namespace SoundSwitch.Features.Audio
 {
     public sealed class MuteOnLockMonitor : IDisposable
     {
-        private readonly List<string> _mutedDevices = [];
+        private readonly HashSet<string> _mutedDevices = [];
         private readonly AudioDeviceWatcher _watcher = new();
         private readonly object _gate = new();
         private bool _enabled;

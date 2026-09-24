@@ -26,6 +26,7 @@ namespace SoundSwitch
         private AudioDeviceIcon _playbackTrayIcon;
         private AvailableUpdate _availableUpdate;
         private bool _updateBalloon;
+        private bool _updatingDeviceLists;
 
         public frmDefault()
         {
@@ -54,7 +55,10 @@ namespace SoundSwitch
             _deviceWatcher.Dispose();
             _deviceRefreshDelay.Dispose();
             _trayHeaderFont?.Dispose();
-            RestoreDefaultTrayIcon();
+
+            if (_defaultTrayIcon is not null)
+                notifyIcon.Icon = _defaultTrayIcon;
+
             _playbackTrayIcon?.Dispose();
 
             base.OnFormClosed(e);
@@ -228,23 +232,14 @@ namespace SoundSwitch
 
         private void ApplyPreferredDevice(bool isPlayback)
         {
-            List<AudioDeviceEntry> devices = isPlayback
-                ? _settings.Audio.Devices.Playback
-                : _settings.Audio.Devices.Recording;
-
-            string preferredId = isPlayback
-                ? _settings.Audio.Devices.PlaybackDefault
-                : _settings.Audio.Devices.RecordingDefault;
+            AudioDevicesSettings devices = _settings.Audio.Devices;
+            string preferredId = devices.PreferredId(isPlayback);
 
             if (string.IsNullOrEmpty(preferredId))
                 return;
 
-            string currentId = isPlayback
-                ? AudioEndpointEnumerator.GetDefaultPlaybackId()
-                : AudioEndpointEnumerator.GetDefaultRecordingId();
-
-            AudioDeviceEntry preferred = devices.Find(entry =>
-                string.Equals(entry.Id, preferredId, StringComparison.OrdinalIgnoreCase));
+            string currentId = AudioEndpointEnumerator.GetDefaultId(isPlayback);
+            AudioDeviceEntry preferred = devices.FindById(isPlayback, preferredId);
 
             if (preferred is { Enabled: true, Connected: true })
             {
@@ -257,7 +252,7 @@ namespace SoundSwitch
             if (preferred is null || !preferred.Enabled)
                 return;
 
-            string fallbackId = NextEnabledConnected(devices, preferredId);
+            string fallbackId = NextEnabledConnected(devices.Devices(isPlayback), preferredId);
 
             if (string.IsNullOrEmpty(fallbackId)
                 || string.Equals(currentId, fallbackId, StringComparison.OrdinalIgnoreCase))
@@ -290,47 +285,53 @@ namespace SoundSwitch
             return null;
         }
 
-        private static void FillAudioDeviceList(ListView list, List<AudioDeviceEntry> devices)
+        private void FillAudioDeviceList(ListView list, List<AudioDeviceEntry> devices)
         {
+            _updatingDeviceLists = true;
             list.BeginUpdate();
-            list.Items.Clear();
-
-            if (list.View != View.Details)
-                list.View = View.Details;
-
-            list.HeaderStyle = ColumnHeaderStyle.None;
-            list.FullRowSelect = true;
-
-            if (list.Columns.Count == 0)
-                list.Columns.Add(string.Empty, list.ClientSize.Width - 4);
-
             ImageList previousIcons = list.SmallImageList;
-            int size = 32 * list.DeviceDpi / 96;
 
-            ImageList icons = new()
+            try
             {
-                ColorDepth = ColorDepth.Depth32Bit,
-                ImageSize = new Size(size, size)
-            };
+                list.Items.Clear();
 
-            list.SmallImageList = icons;
-
-            foreach (AudioDeviceEntry device in devices)
-            {
-                if (!device.Connected)
-                    continue;
-
-                list.Items.Add(new ListViewItem(device.Name)
+                if (list.Columns.Count == 0)
                 {
-                    Tag = device.Id,
-                    Checked = device.Enabled,
-                    ImageIndex = AddDeviceIcon(icons, device.IconPath, size)
-                });
+                    list.View = View.Details;
+                    list.HeaderStyle = ColumnHeaderStyle.None;
+                    list.FullRowSelect = true;
+                    list.Columns.Add(string.Empty, list.ClientSize.Width - 4);
+                }
+
+                int size = 32 * list.DeviceDpi / 96;
+
+                ImageList icons = new()
+                {
+                    ColorDepth = ColorDepth.Depth32Bit,
+                    ImageSize = new Size(size, size)
+                };
+
+                list.SmallImageList = icons;
+
+                foreach (AudioDeviceEntry device in devices)
+                {
+                    if (!device.Connected)
+                        continue;
+
+                    list.Items.Add(new ListViewItem(device.Name)
+                    {
+                        Tag = device.Id,
+                        Checked = device.Enabled,
+                        ImageIndex = AddDeviceIcon(icons, device.IconPath, size)
+                    });
+                }
             }
-
-            list.EndUpdate();
-
-            previousIcons?.Dispose();
+            finally
+            {
+                list.EndUpdate();
+                _updatingDeviceLists = false;
+                previousIcons?.Dispose();
+            }
         }
 
         private static int AddDeviceIcon(ImageList icons, string iconPath, int size)
@@ -357,6 +358,9 @@ namespace SoundSwitch
 
         private void EnableAudioDevice(List<AudioDeviceEntry> devices, ListViewItem item)
         {
+            if (_updatingDeviceLists)
+                return;
+
             string id = item.Tag as string;
 
             if (string.IsNullOrEmpty(id))
@@ -407,10 +411,7 @@ namespace SoundSwitch
             box.Text = shortcut;
             box.SelectionStart = box.TextLength;
 
-            if (isPlayback)
-                _settings.Audio.Devices.PlaybackShortcut = shortcut;
-            else
-                _settings.Audio.Devices.RecordingShortcut = shortcut;
+            _settings.Audio.Devices.SetShortcut(isPlayback, shortcut);
 
             AppConfig.Save(_settings);
         }
@@ -433,10 +434,10 @@ namespace SoundSwitch
         {
             _hotkeys.Clear();
 
-            if (ShortcutKeys.TryParse(_settings.Audio.Devices.PlaybackShortcut, out Keys playback))
+            if (ShortcutKeys.TryParse(_settings.Audio.Devices.Shortcut(true), out Keys playback))
                 _hotkeys.Register(playback, () => CycleDefaultDevice(isPlayback: true));
 
-            if (ShortcutKeys.TryParse(_settings.Audio.Devices.RecordingShortcut, out Keys recording))
+            if (ShortcutKeys.TryParse(_settings.Audio.Devices.Shortcut(false), out Keys recording))
                 _hotkeys.Register(recording, () => CycleDefaultDevice(isPlayback: false));
         }
 
@@ -444,21 +445,17 @@ namespace SoundSwitch
         {
             AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
 
-            List<AudioDeviceEntry> devices = isPlayback
-                ? _settings.Audio.Devices.Playback.FindAll(device => device.Enabled && device.Connected)
-                : _settings.Audio.Devices.Recording.FindAll(device => device.Enabled && device.Connected);
+            List<AudioDeviceEntry> devices = _settings.Audio.Devices.EnabledConnected(isPlayback);
 
             if (devices.Count == 0)
                 return;
 
-            string currentId = isPlayback
-                ? AudioEndpointEnumerator.GetDefaultPlaybackId()
-                : AudioEndpointEnumerator.GetDefaultRecordingId();
+            string currentId = AudioEndpointEnumerator.GetDefaultId(isPlayback);
 
             int current = devices.FindIndex(device => string.Equals(device.Id, currentId, StringComparison.OrdinalIgnoreCase));
             AudioDeviceEntry next = devices[current < 0 ? 0 : (current + 1) % devices.Count];
 
-            SetTrayDefaultDevice(next.Id, isPlayback);
+            SetWindowsDefault(next.Id, isPlayback, updatePreferred: true);
         }
 
         private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
@@ -617,8 +614,8 @@ namespace SoundSwitch
 
             ApplyPlaybackTrayIcon();
 
-            List<AudioDeviceEntry> playback = _settings.Audio.Devices.Playback.FindAll(device => device.Enabled && device.Connected);
-            List<AudioDeviceEntry> recording = _settings.Audio.Devices.Recording.FindAll(device => device.Enabled && device.Connected);
+            List<AudioDeviceEntry> playback = _settings.Audio.Devices.EnabledConnected(true);
+            List<AudioDeviceEntry> recording = _settings.Audio.Devices.EnabledConnected(false);
 
             string playbackDefault = AudioEndpointEnumerator.GetDefaultPlaybackId();
             string recordingDefault = AudioEndpointEnumerator.GetDefaultRecordingId();
@@ -658,14 +655,9 @@ namespace SoundSwitch
                 };
 
                 string id = device.Id;
-                item.Click += (_, _) => SetTrayDefaultDevice(id, isPlayback);
+                item.Click += (_, _) => SetWindowsDefault(id, isPlayback, updatePreferred: true);
                 cmDevices.Items.Add(item);
             }
-        }
-
-        private bool SetTrayDefaultDevice(string deviceId, bool isPlayback)
-        {
-            return SetWindowsDefault(deviceId, isPlayback, updatePreferred: true);
         }
 
         private bool SetWindowsDefault(string deviceId, bool isPlayback, bool updatePreferred)
@@ -675,11 +667,7 @@ namespace SoundSwitch
 
             if (updatePreferred)
             {
-                if (isPlayback)
-                    _settings.Audio.Devices.PlaybackDefault = deviceId;
-                else
-                    _settings.Audio.Devices.RecordingDefault = deviceId;
-
+                _settings.Audio.Devices.SetPreferredId(isPlayback, deviceId);
                 AppConfig.Save(_settings);
             }
 
@@ -696,9 +684,7 @@ namespace SoundSwitch
             if (!_settings.Audio.ShowNotificationOnDeviceChange)
                 return;
 
-            List<AudioDeviceEntry> devices = isPlayback ? _settings.Audio.Devices.Playback : _settings.Audio.Devices.Recording;
-
-            AudioDeviceEntry device = devices.Find(entry => string.Equals(entry.Id, deviceId, StringComparison.OrdinalIgnoreCase));
+            AudioDeviceEntry device = _settings.Audio.Devices.FindById(isPlayback, deviceId);
 
             string name = string.IsNullOrWhiteSpace(device?.Name) ? deviceId : device.Name;
 
@@ -717,8 +703,7 @@ namespace SoundSwitch
             if (string.IsNullOrEmpty(deviceId))
                 deviceId = _settings.Audio.Devices.PlaybackDefault;
 
-            AudioDeviceEntry device = _settings.Audio.Devices.Playback.Find(entry =>
-                string.Equals(entry.Id, deviceId, StringComparison.OrdinalIgnoreCase));
+            AudioDeviceEntry device = _settings.Audio.Devices.FindById(true, deviceId);
 
             AudioDeviceIcon loaded = AudioDeviceIcon.Load(device?.IconPath, SystemInformation.SmallIconSize.Width);
             AudioDeviceIcon previous = _playbackTrayIcon;
@@ -732,12 +717,6 @@ namespace SoundSwitch
                 notifyIcon.Text = "SoundSwitch";
 
             previous?.Dispose();
-        }
-
-        private void RestoreDefaultTrayIcon()
-        {
-            if (_defaultTrayIcon is not null)
-                notifyIcon.Icon = _defaultTrayIcon;
         }
 
         private void ShowTrayMenu(ContextMenuStrip menu)
