@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Windows.Configurations.Features.Shortcuts
+namespace SoundSwitch.Features.Shortcuts
 {
     /// <summary>
     /// Janela apenas de mensagens: mantém os atalhos globais válidos mesmo quando o

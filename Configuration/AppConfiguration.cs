@@ -1,4 +1,4 @@
-﻿namespace Windows.Configurations.Configuration
+namespace SoundSwitch.Configuration
 {
     public class AppConfiguration
     {

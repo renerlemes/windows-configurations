@@ -1,6 +1,6 @@
 using System;
 
-namespace Windows.Configurations.Updater
+namespace SoundSwitch.Updater
 {
     internal static class AppVersion
     {

@@ -1,6 +1,6 @@
-# Windows Configurations
+# SoundSwitch
 
-O **Windows Configurations** gerencia dispositivos de reprodução e gravação pelo ícone da bandeja do sistema.
+O **SoundSwitch** gerencia dispositivos de reprodução e gravação pelo ícone da bandeja do sistema.
 
 Configure uma vez e use pelo ícone na bandeja do sistema. Clique com o botão direito no ícone e escolha **Configurações**.
 

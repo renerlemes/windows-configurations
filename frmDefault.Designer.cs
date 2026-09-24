@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Windows.Configurations
+namespace SoundSwitch
 {
     partial class frmDefault
     {
@@ -237,7 +237,7 @@ namespace Windows.Configurations
             // notifyIcon
             // 
             notifyIcon.Icon = (Icon)resources.GetObject("notifyIcon.Icon");
-            notifyIcon.Text = "Windows Configurations";
+            notifyIcon.Text = "SoundSwitch";
             notifyIcon.Visible = true;
             notifyIcon.MouseClick += notifyIcon_MouseClick;
             // 
@@ -256,7 +256,7 @@ namespace Windows.Configurations
             // 
             lblTrayAppVersion.Name = "lblTrayAppVersion";
             lblTrayAppVersion.Size = new Size(205, 22);
-            lblTrayAppVersion.Text = "Windows Configurations";
+            lblTrayAppVersion.Text = "SoundSwitch";
             lblTrayAppVersion.Click += lblTrayAppVersion_Click;
             // 
             // atualizacaoDisponivelToolStripMenuItem
@@ -303,7 +303,7 @@ namespace Windows.Configurations
             Name = "frmDefault";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Windows Configurations";
+            Text = "SoundSwitch";
             FormClosing += frmDefault_FormClosing;
             tabDefault.ResumeLayout(false);
             tabGeral.ResumeLayout(false);

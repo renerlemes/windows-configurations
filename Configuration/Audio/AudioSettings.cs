@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Windows.Configurations.Configuration.Audio
+namespace SoundSwitch.Configuration.Audio
 {
     public class AudioSettings
     {

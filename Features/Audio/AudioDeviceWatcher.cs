@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Windows.Configurations.Features.Audio
+namespace SoundSwitch.Features.Audio
 {
     /// <summary>
     /// Avisa quando o Windows conecta, desconecta ou troca o padrão de um dispositivo de áudio.

@@ -1,4 +1,4 @@
-namespace Windows.Configurations.Updater
+namespace SoundSwitch.Updater
 {
     internal sealed class AvailableUpdate
     {

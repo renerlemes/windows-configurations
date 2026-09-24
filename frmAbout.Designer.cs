@@ -1,4 +1,4 @@
-﻿namespace Windows.Configurations
+namespace SoundSwitch
 {
     partial class frmAbout
     {
@@ -43,7 +43,7 @@
             Name = "frmAbout";
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            Text = "Windows Configurations";
+            Text = "SoundSwitch";
             ResumeLayout(false);
         }
 

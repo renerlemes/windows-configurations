@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Windows.Configurations.Features.Audio
+namespace SoundSwitch.Features.Audio
 {
     internal static class SystemVolume
     {

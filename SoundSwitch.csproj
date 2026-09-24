@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -8,10 +8,12 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <AssemblyName>SoundSwitch</AssemblyName>
+    <RootNamespace>SoundSwitch</RootNamespace>
     <Version>1.0.4</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-    <AssemblyTitle>Windows Configurations</AssemblyTitle>
-    <Product>Windows Configurations</Product>
+    <AssemblyTitle>SoundSwitch</AssemblyTitle>
+    <Product>SoundSwitch</Product>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Windows.Configurations.json">
+    <None Update="SoundSwitch.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

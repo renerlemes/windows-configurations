@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Windows.Configurations.Features.Audio;
+using SoundSwitch.Features.Audio;
 
-namespace Windows.Configurations.Configuration.Audio
+namespace SoundSwitch.Configuration.Audio
 {
     public static class AudioDeviceCatalog
     {

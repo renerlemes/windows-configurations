@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
-using Windows.Configurations.Updater;
+using SoundSwitch.Updater;
 
-namespace Windows.Configurations
+namespace SoundSwitch
 {
     public partial class frmUpdater : Form
     {
@@ -60,7 +60,7 @@ namespace Windows.Configurations
             {
                 MessageBox.Show(
                     ex.Message,
-                    "Windows Configurations",
+                    "SoundSwitch",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 

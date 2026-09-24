@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace Windows.Configurations.Features.Audio
+namespace SoundSwitch.Features.Audio
 {
     internal sealed class AudioEndpoint
     {

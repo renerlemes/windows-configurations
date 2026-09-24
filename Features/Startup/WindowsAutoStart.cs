@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Windows.Configurations.Features.Startup
+namespace SoundSwitch.Features.Startup
 {
     /// <summary>
     /// O aplicativo roda sem elevação, então a chave Run do usuário resolve e continua
@@ -13,7 +13,8 @@ namespace Windows.Configurations.Features.Startup
     internal static class WindowsAutoStart
     {
         private const string RunPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-        private const string ValueName = "Windows Configurations";
+        private const string ValueName = "SoundSwitch";
+        private const string LegacyRunName = "Windows Configurations";
         private const string LegacyTaskName = "Windows Configurations";
 
         private static bool _legacyTaskChecked;
@@ -26,9 +27,15 @@ namespace Windows.Configurations.Features.Startup
                 ?? throw new InvalidOperationException("Não foi possível abrir a chave de inicialização do Windows.");
 
             if (enabled)
+            {
                 key.SetValue(ValueName, $"\"{Application.ExecutablePath}\"", RegistryValueKind.String);
+                key.DeleteValue(LegacyRunName, throwOnMissingValue: false);
+            }
             else
+            {
                 key.DeleteValue(ValueName, throwOnMissingValue: false);
+                key.DeleteValue(LegacyRunName, throwOnMissingValue: false);
+            }
         }
 
         /// <summary>

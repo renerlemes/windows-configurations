@@ -6,21 +6,21 @@
   #define MyAppPublishDir "..\publish"
 #endif
 
-#define MyAppName "Windows Configurations"
-#define MyAppExeName "Windows.Configurations.exe"
+#define MyAppName "SoundSwitch"
+#define MyAppExeName "SoundSwitch.exe"
 
 [Setup]
-AppId=Windows.Configurations
+AppId=SoundSwitch
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
-AppPublisher=Windows Configurations
+AppPublisher=SoundSwitch
 VersionInfoVersion={#MyAppVersion}
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 OutputDir=..\artifacts
-OutputBaseFilename=Windows.Configurations_{#MyAppVersion}_Setup
+OutputBaseFilename=SoundSwitch_{#MyAppVersion}_Setup
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.17763
@@ -40,8 +40,8 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#MyAppPublishDir}\*"; DestDir: "{app}"; Excludes: "Windows.Configurations.json"; Flags: ignoreversion recursesubdirs
-Source: "{#MyAppPublishDir}\Windows.Configurations.json"; DestDir: "{app}"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "{#MyAppPublishDir}\*"; DestDir: "{app}"; Excludes: "SoundSwitch.json"; Flags: ignoreversion recursesubdirs
+Source: "{#MyAppPublishDir}\SoundSwitch.json"; DestDir: "{app}"; Flags: onlyifdoesntexist uninsneveruninstall
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

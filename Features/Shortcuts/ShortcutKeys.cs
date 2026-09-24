@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Windows.Configurations.Features.Shortcuts
+namespace SoundSwitch.Features.Shortcuts
 {
     internal static class ShortcutKeys
     {

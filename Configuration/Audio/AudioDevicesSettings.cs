@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Windows.Configurations.Configuration.Audio
+namespace SoundSwitch.Configuration.Audio
 {
     public class AudioDeviceEntry
     {

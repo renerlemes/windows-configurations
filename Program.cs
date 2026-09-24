@@ -2,11 +2,11 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Windows.Configurations
+namespace SoundSwitch
 {
     internal static class Program
     {
-        private const string MutexName = @"Local\Windows.Configurations";
+        private const string MutexName = @"Local\SoundSwitch";
 
         [STAThread]
         static void Main()
@@ -18,8 +18,8 @@ namespace Windows.Configurations
             if (!createdNew)
             {
                 MessageBox.Show(
-                    "O Windows Configurations já está em execução.",
-                    "Windows Configurations",
+                    "O SoundSwitch já está em execução.",
+                    "SoundSwitch",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 

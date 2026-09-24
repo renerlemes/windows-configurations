@@ -1,4 +1,4 @@
-namespace Windows.Configurations.Configuration.General
+namespace SoundSwitch.Configuration.General
 {
     public class GeneralSettings
     {

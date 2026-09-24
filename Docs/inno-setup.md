@@ -1,6 +1,6 @@
 # Inno Setup — download e teste local
 
-O instalador do Windows Configurations é gerado pelo [Inno Setup 6](https://jrsoftware.org/isinfo.php), a partir do script `Installer/Setup.iss`. Este guia cobre a instalação da ferramenta e o teste na sua máquina, no mesmo fluxo usado pelo GitHub Action.
+O instalador do SoundSwitch é gerado pelo [Inno Setup 6](https://jrsoftware.org/isinfo.php), a partir do script `Installer/Setup.iss`. Este guia cobre a instalação da ferramenta e o teste na sua máquina, no mesmo fluxo usado pelo GitHub Action.
 
 ## Qual versão baixar
 
@@ -20,13 +20,13 @@ Se o caminho for outro, ajuste os comandos abaixo.
 
 ## Publicar o aplicativo
 
-Abra o PowerShell na raiz do repositório (`Windows.Configurations`) e publique em Release, self-contained, x64:
+Abra o PowerShell na raiz do repositório (`SoundSwitch`) e publique em Release, self-contained, x64:
 
 ```powershell
-dotnet publish Windows.Configurations.csproj -c Release -r win-x64 --self-contained true -o publish
+dotnet publish SoundSwitch.csproj -c Release -r win-x64 --self-contained true -o publish
 ```
 
-A pasta `publish\` precisa existir e conter `Windows.Configurations.exe` antes de compilador o instalador. O `Setup.iss` lê essa pasta por padrão (`..\publish` relativo a `Installer\`).
+A pasta `publish\` precisa existir e conter `SoundSwitch.exe` antes de compilador o instalador. O `Setup.iss` lê essa pasta por padrão (`..\publish` relativo a `Installer\`).
 
 ## Compilar o instalador
 
@@ -45,32 +45,32 @@ Pelo Inno Setup Compiler (GUI):
 O `.exe` gerado sai em:
 
 ```text
-artifacts\Windows.Configurations_1.0.0_Setup.exe
+artifacts\SoundSwitch_1.0.0_Setup.exe
 ```
 
-Se passar outra versão, o nome do arquivo acompanha, por exemplo `Windows.Configurations_1.0.12_Setup.exe`.
+Se passar outra versão, o nome do arquivo acompanha, por exemplo `SoundSwitch_1.0.12_Setup.exe`.
 
 ## Testar o instalador
 
-Feche o Windows Configurations se ele estiver aberto. O script pede privilégio de administrador.
+Feche o SoundSwitch se ele estiver aberto. O script pede privilégio de administrador.
 
 Instalação com assistente:
 
 ```powershell
-.\artifacts\Windows.Configurations_1.0.0_Setup.exe
+.\artifacts\SoundSwitch_1.0.0_Setup.exe
 ```
 
 Instalação silenciosa (útil para repetir o teste):
 
 ```powershell
-.\artifacts\Windows.Configurations_1.0.0_Setup.exe /VERYSILENT /NORESTART
+.\artifacts\SoundSwitch_1.0.0_Setup.exe /VERYSILENT /NORESTART
 ```
 
 Confirme depois:
 
-- O app está em `C:\Program Files\Windows Configurations\`.
+- O app está em `C:\Program Files\SoundSwitch\`.
 - Há atalho no menu Iniciar.
-- O `Windows.Configurations.json` só é criado na primeira instalação; reinstalação **não** sobrescreve um JSON que já exista.
+- O `SoundSwitch.json` só é criado na primeira instalação; reinstalação **não** sobrescreve um JSON que já exista.
 - O aplicativo abre e aparece na bandeja.
 
 Para desinstalar: **Aplicativos** do Windows, ou o atalho de desinstalação no menu Iniciar.

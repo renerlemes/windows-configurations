@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text.Json;
 
-namespace Windows.Configurations.Configuration
+namespace SoundSwitch.Configuration
 {
     public static class AppConfig
     {
@@ -12,14 +12,17 @@ namespace Windows.Configurations.Configuration
         /// </summary>
         public static string FilePath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "SoundSwitch",
+            "SoundSwitch.json");
+
+        private static string SeedFilePath => Path.Combine(AppContext.BaseDirectory, "SoundSwitch.json");
+
+        private static string LegacyFilePath => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Windows Configurations",
             "Windows.Configurations.json");
 
-        /// <summary>
-        /// Onde as versões elevadas gravavam, e onde o instalador deixa o arquivo padrão.
-        /// Serve de origem na primeira execução depois da atualização.
-        /// </summary>
-        private static string SeedFilePath => Path.Combine(AppContext.BaseDirectory, "Windows.Configurations.json");
+        private static string LegacySeedFilePath => Path.Combine(AppContext.BaseDirectory, "Windows.Configurations.json");
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
@@ -29,7 +32,11 @@ namespace Windows.Configurations.Configuration
 
         public static AppConfiguration Load()
         {
-            AppConfiguration settings = Read(FilePath) ?? Read(SeedFilePath) ?? new AppConfiguration();
+            AppConfiguration settings = Read(FilePath)
+                ?? Read(LegacyFilePath)
+                ?? Read(SeedFilePath)
+                ?? Read(LegacySeedFilePath)
+                ?? new AppConfiguration();
 
             settings.EnsureDefaults();
 

@@ -10,7 +10,7 @@ permissions:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  PROJECT: Windows.Configurations
+  PROJECT: SoundSwitch
 
 jobs:
   Release:
@@ -138,5 +138,5 @@ jobs:
 
           gh release create $tag $installer `
             --repo '${{ github.repository }}' `
-            --title "Windows Configurations $version" `
+            --title "SoundSwitch $version" `
             --generate-notes

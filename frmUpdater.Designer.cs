@@ -1,4 +1,4 @@
-﻿namespace Windows.Configurations
+namespace SoundSwitch
 {
     partial class frmUpdater
     {
@@ -94,7 +94,7 @@
             Name = "frmUpdater";
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            Text = "Windows Configurations";
+            Text = "SoundSwitch";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

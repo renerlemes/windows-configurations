@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Windows.Configurations.Updater
+namespace SoundSwitch.Updater
 {
     internal sealed class GitHubRelease
     {

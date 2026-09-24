@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Windows.Configurations.Updater
+namespace SoundSwitch.Updater
 {
     internal static class UpdateInstaller
     {

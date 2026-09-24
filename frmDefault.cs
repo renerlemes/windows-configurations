@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Windows.Configurations.Configuration;
-using Windows.Configurations.Configuration.Audio;
-using Windows.Configurations.Features.Audio;
-using Windows.Configurations.Features.Shortcuts;
-using Windows.Configurations.Features.Startup;
-using Windows.Configurations.Updater;
+using SoundSwitch.Configuration;
+using SoundSwitch.Configuration.Audio;
+using SoundSwitch.Features.Audio;
+using SoundSwitch.Features.Shortcuts;
+using SoundSwitch.Features.Startup;
+using SoundSwitch.Updater;
 
-namespace Windows.Configurations
+namespace SoundSwitch
 {
     public partial class frmDefault : Form
     {
@@ -151,7 +151,7 @@ namespace Windows.Configurations
 
                 MessageBox.Show(
                     ex.Message,
-                    "Windows Configurations",
+                    "SoundSwitch",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -503,8 +503,8 @@ namespace Windows.Configurations
             _updateBalloon = true;
             notifyIcon.ShowBalloonTip(
                 1000,
-                "Windows Configurations",
-                $"Atualização para Windows Configurations ({update.VersionDisplay}) está disponível",
+                "SoundSwitch",
+                $"Atualização para SoundSwitch ({update.VersionDisplay}) está disponível",
                 ToolTipIcon.Info);
         }
 
@@ -691,7 +691,7 @@ namespace Windows.Configurations
             if (!string.IsNullOrWhiteSpace(device?.Name))
                 notifyIcon.Text = device.Name.Length <= 63 ? device.Name : device.Name[..63];
             else
-                notifyIcon.Text = "Windows Configurations";
+                notifyIcon.Text = "SoundSwitch";
 
             previous?.Dispose();
         }

@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Windows.Configurations.Updater
+namespace SoundSwitch.Updater
 {
     internal static class UpdateChecker
     {
@@ -50,7 +50,7 @@ namespace Windows.Configurations.Updater
                 Timeout = TimeSpan.FromMinutes(5)
             };
 
-            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Windows.Configurations", AppVersion.CurrentDisplay));
+            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("SoundSwitch", AppVersion.CurrentDisplay));
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
 
             return client;

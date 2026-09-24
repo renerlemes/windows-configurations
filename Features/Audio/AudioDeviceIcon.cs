@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace Windows.Configurations.Features.Audio
+namespace SoundSwitch.Features.Audio
 {
     /// <summary>
     /// Ícone extraído do endpoint, dono do HICON correspondente. Converter o handle em outro
