@@ -75,6 +75,7 @@
             progressBar.Location = new System.Drawing.Point(12, 415);
             progressBar.Name = "progressBar";
             progressBar.Size = new System.Drawing.Size(695, 23);
+            progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             progressBar.TabIndex = 2;
             progressBar.Visible = false;
             // 

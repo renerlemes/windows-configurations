@@ -36,9 +36,21 @@ namespace Windows.Configurations
             btnInstalar.Enabled = false;
             UseWaitCursor = true;
 
+            // Marquee até o primeiro relato: entre o clique e a resposta do servidor
+            // não existe percentual, e uma barra parada em zero pareceria travada.
+            progressBar.Value = 0;
+            progressBar.Style = ProgressBarStyle.Marquee;
+            progressBar.Visible = true;
+
+            Progress<int> progress = new(percent =>
+            {
+                progressBar.Style = ProgressBarStyle.Blocks;
+                progressBar.Value = Math.Clamp(percent, 0, 100);
+            });
+
             try
             {
-                string installer = await UpdateInstaller.DownloadAsync(_update);
+                string installer = await UpdateInstaller.DownloadAsync(_update, progress);
 
                 UpdateInstaller.Start(installer);
 
@@ -51,6 +63,10 @@ namespace Windows.Configurations
                     "Windows Configurations",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
+
+                progressBar.Visible = false;
+                progressBar.Style = ProgressBarStyle.Blocks;
+                progressBar.Value = 0;
 
                 btnInstalar.Enabled = true;
                 UseWaitCursor = false;

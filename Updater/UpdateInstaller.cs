@@ -9,7 +9,14 @@ namespace Windows.Configurations.Updater
 {
     internal static class UpdateInstaller
     {
-        public static async Task<string> DownloadAsync(AvailableUpdate update, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// <paramref name="progress"/> recebe o percentual concluído. Fica sem relatos
+        /// quando o servidor não informa o tamanho total: aí só o fim do download é certo.
+        /// </summary>
+        public static async Task<string> DownloadAsync(
+            AvailableUpdate update,
+            IProgress<int> progress = null,
+            CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(update);
 
@@ -20,8 +27,34 @@ namespace Windows.Configurations.Updater
 
             response.EnsureSuccessStatusCode();
 
+            long total = response.Content.Headers.ContentLength ?? 0;
+
+            await using Stream source = await response.Content.ReadAsStreamAsync(cancellationToken);
             await using FileStream file = File.Create(path);
-            await response.Content.CopyToAsync(file, cancellationToken);
+
+            byte[] buffer = new byte[81920];
+            long received = 0;
+            int lastPercent = -1;
+            int read;
+
+            while ((read = await source.ReadAsync(buffer, cancellationToken)) > 0)
+            {
+                await file.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
+
+                received += read;
+
+                if (total <= 0 || progress is null)
+                    continue;
+
+                int percent = (int)(received * 100 / total);
+
+                // Só relata quando o número muda: evita repintar a barra a cada bloco.
+                if (percent == lastPercent)
+                    continue;
+
+                lastPercent = percent;
+                progress.Report(percent);
+            }
 
             return path;
         }
