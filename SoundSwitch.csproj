@@ -37,4 +37,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Docs\Recursos\" />
+  </ItemGroup>
+
 </Project>
