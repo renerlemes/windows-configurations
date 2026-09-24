@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using SoundSwitch.Configuration;
 using SoundSwitch.Configuration.Audio;
@@ -63,46 +64,52 @@ namespace SoundSwitch
         {
             _settings = AppConfig.Load();
 
-            #region Áudio
-
-            cbAudioMuteOnLock.Checked = _settings.Audio.MuteOnLock;
-            _muteOnLockMonitor.SetEnabled(cbAudioMuteOnLock.Checked);
-            cbAudioMuteOnLock.CheckedChanged += cbMuteOnLock_CheckedChanged;
-
-            cbAudioDeviceChangeNotification.Checked = _settings.Audio.ShowNotificationOnDeviceChange;
-            cbAudioDeviceChangeNotification.CheckedChanged += cbAudioDeviceChangeNotification_CheckedChanged;
-
             AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
             ApplyPreferredDevices();
             AppConfig.Save(_settings);
 
-            lvAudioDeviceList(lvAudioPlayback, _settings.Audio.Devices.Playback);
-            lvAudioDeviceList(lvAudioRecord, _settings.Audio.Devices.Recording);
+            #region Reprodução
 
-            lvAudioPlayback.ItemChecked += lvAudioPlayback_ItemChecked;
-            lvAudioRecord.ItemChecked += lvAudioRecord_ItemChecked;
+            FillAudioDeviceList(lvAudioReproducao, _settings.Audio.Devices.Playback);
+            lvAudioReproducao.ItemChecked += lvAudioReproducao_ItemChecked;
+            txtReproducaoAtalho.Text = _settings.Audio.Devices.PlaybackShortcut;
 
-            txtDevicePlaybackShortcut.Text = _settings.Audio.Devices.PlaybackShortcut;
-            txtDeviceRecordShortcut.Text = _settings.Audio.Devices.RecordingShortcut;
+            #endregion
+
+            #region Gravação
+
+            FillAudioDeviceList(lvAudioGravacao, _settings.Audio.Devices.Recording);
+            lvAudioGravacao.ItemChecked += lvAudioGravacao_ItemChecked;
+            txtGravacaoAtalho.Text = _settings.Audio.Devices.RecordingShortcut;
+
+            #endregion
 
             RefreshHotkeys();
             ApplyPlaybackTrayIcon();
 
-            #endregion
+            #region Configurações
 
-            #region Geral
-
-            cbGeralInitializeWindows.Checked = _settings.General.AutoStart;
+            cbConfigGeralIniciarWindows.Checked = _settings.General.AutoStart;
 
             try
             {
-                WindowsAutoStart.SetEnabled(cbGeralInitializeWindows.Checked);
+                WindowsAutoStart.SetEnabled(cbConfigGeralIniciarWindows.Checked);
             }
             catch
             {
             }
 
-            cbGeralInitializeWindows.CheckedChanged += cbGeralInitializeWindows_CheckedChanged;
+            cbConfigGeralIniciarWindows.CheckedChanged += cbConfigGeralIniciarWindows_CheckedChanged;
+
+            cbConfigAudioMudoBloquear.Checked = _settings.Audio.MuteOnLock;
+            _muteOnLockMonitor.SetEnabled(cbConfigAudioMudoBloquear.Checked);
+            cbConfigAudioMudoBloquear.CheckedChanged += cbConfigAudioMudoBloquear_CheckedChanged;
+
+            cbConfigNotificacoesMostrar.Checked = _settings.Audio.ShowNotificationOnDeviceChange;
+            cbConfigNotificacoesMostrar.CheckedChanged += cbConfigNotificacoesMostrar_CheckedChanged;
+
+            lbConfigVersaoAtual.Text = $"Atual: {AppVersion.CurrentDisplay}";
+            RefreshConfigVersaoDisponivel();
 
             #endregion
         }
@@ -121,33 +128,33 @@ namespace SoundSwitch
             }
         }
 
-        private void cbMuteOnLock_CheckedChanged(object sender, EventArgs e)
+        private void cbConfigAudioMudoBloquear_CheckedChanged(object sender, EventArgs e)
         {
-            _settings.Audio.MuteOnLock = cbAudioMuteOnLock.Checked;
+            _settings.Audio.MuteOnLock = cbConfigAudioMudoBloquear.Checked;
 
             AppConfig.Save(_settings);
 
-            _muteOnLockMonitor.SetEnabled(cbAudioMuteOnLock.Checked);
+            _muteOnLockMonitor.SetEnabled(cbConfigAudioMudoBloquear.Checked);
         }
 
-        private void cbAudioDeviceChangeNotification_CheckedChanged(object sender, EventArgs e)
+        private void cbConfigNotificacoesMostrar_CheckedChanged(object sender, EventArgs e)
         {
-            _settings.Audio.ShowNotificationOnDeviceChange = cbAudioDeviceChangeNotification.Checked;
+            _settings.Audio.ShowNotificationOnDeviceChange = cbConfigNotificacoesMostrar.Checked;
 
             AppConfig.Save(_settings);
         }
 
-        private void cbGeralInitializeWindows_CheckedChanged(object sender, EventArgs e)
+        private void cbConfigGeralIniciarWindows_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-                WindowsAutoStart.SetEnabled(cbGeralInitializeWindows.Checked);
+                WindowsAutoStart.SetEnabled(cbConfigGeralIniciarWindows.Checked);
             }
             catch (Exception ex)
             {
-                cbGeralInitializeWindows.CheckedChanged -= cbGeralInitializeWindows_CheckedChanged;
-                cbGeralInitializeWindows.Checked = !cbGeralInitializeWindows.Checked;
-                cbGeralInitializeWindows.CheckedChanged += cbGeralInitializeWindows_CheckedChanged;
+                cbConfigGeralIniciarWindows.CheckedChanged -= cbConfigGeralIniciarWindows_CheckedChanged;
+                cbConfigGeralIniciarWindows.Checked = !cbConfigGeralIniciarWindows.Checked;
+                cbConfigGeralIniciarWindows.CheckedChanged += cbConfigGeralIniciarWindows_CheckedChanged;
 
                 MessageBox.Show(
                     ex.Message,
@@ -158,7 +165,7 @@ namespace SoundSwitch
                 return;
             }
 
-            _settings.General.AutoStart = cbGeralInitializeWindows.Checked;
+            _settings.General.AutoStart = cbConfigGeralIniciarWindows.Checked;
 
             AppConfig.Save(_settings);
         }
@@ -203,8 +210,8 @@ namespace SoundSwitch
             AudioDeviceCatalog.Refresh(_settings.Audio.Devices);
             ApplyPreferredDevices();
 
-            lvAudioDeviceList(lvAudioPlayback, _settings.Audio.Devices.Playback);
-            lvAudioDeviceList(lvAudioRecord, _settings.Audio.Devices.Recording);
+            FillAudioDeviceList(lvAudioReproducao, _settings.Audio.Devices.Playback);
+            FillAudioDeviceList(lvAudioGravacao, _settings.Audio.Devices.Recording);
 
             ApplyPlaybackTrayIcon();
         }
@@ -283,7 +290,7 @@ namespace SoundSwitch
             return null;
         }
 
-        private static void lvAudioDeviceList(ListView list, List<AudioDeviceEntry> devices)
+        private static void FillAudioDeviceList(ListView list, List<AudioDeviceEntry> devices)
         {
             list.BeginUpdate();
             list.Items.Clear();
@@ -338,17 +345,17 @@ namespace SoundSwitch
             return icons.Images.Count - 1;
         }
 
-        private void lvAudioPlayback_ItemChecked(object sender, ItemCheckedEventArgs e)
+        private void lvAudioReproducao_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            lvAudioDeviceEnable(_settings.Audio.Devices.Playback, e.Item);
+            EnableAudioDevice(_settings.Audio.Devices.Playback, e.Item);
         }
 
-        private void lvAudioRecord_ItemChecked(object sender, ItemCheckedEventArgs e)
+        private void lvAudioGravacao_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            lvAudioDeviceEnable(_settings.Audio.Devices.Recording, e.Item);
+            EnableAudioDevice(_settings.Audio.Devices.Recording, e.Item);
         }
 
-        private void lvAudioDeviceEnable(List<AudioDeviceEntry> devices, ListViewItem item)
+        private void EnableAudioDevice(List<AudioDeviceEntry> devices, ListViewItem item)
         {
             string id = item.Tag as string;
 
@@ -364,14 +371,14 @@ namespace SoundSwitch
             AppConfig.Save(_settings);
         }
 
-        private void txtDevicePlaybackShortcut_KeyDown(object sender, KeyEventArgs e)
+        private void txtReproducaoAtalho_KeyDown(object sender, KeyEventArgs e)
         {
-            CaptureShortcut(txtDevicePlaybackShortcut, e, isPlayback: true);
+            CaptureShortcut(txtReproducaoAtalho, e, isPlayback: true);
         }
 
-        private void txtDeviceRecordShortcut_KeyDown(object sender, KeyEventArgs e)
+        private void txtGravacaoAtalho_KeyDown(object sender, KeyEventArgs e)
         {
-            CaptureShortcut(txtDeviceRecordShortcut, e, isPlayback: false);
+            CaptureShortcut(txtGravacaoAtalho, e, isPlayback: false);
         }
 
         private void CaptureShortcut(TextBox box, KeyEventArgs e, bool isPlayback)
@@ -474,7 +481,6 @@ namespace SoundSwitch
 
             lblTrayAppVersion.Font = _trayHeaderFont;
             lblTrayAppVersion.Text = $"{Application.ProductName} ({AppVersion.CurrentDisplay})";
-            SetTrayUpdateAvailable(null);
 
             notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
         }
@@ -495,10 +501,29 @@ namespace SoundSwitch
             }
         }
 
+        private void RefreshConfigVersaoDisponivel()
+        {
+            string version = _availableUpdate?.VersionDisplay;
+            bool available = !string.IsNullOrWhiteSpace(version);
+
+            lbConfigVersaoDisponivel.Text = available
+                ? $"Disponível: {AppVersion.Format(version)}"
+                : "Disponível: —";
+
+            btnConfigVersaoAtualizar.Visible = available;
+            pbConfigVersao.Visible = available;
+
+            if (!available)
+            {
+                pbConfigVersao.Style = ProgressBarStyle.Blocks;
+                pbConfigVersao.Value = 0;
+            }
+        }
+
         private void ApplyAvailableUpdate(AvailableUpdate update)
         {
             _availableUpdate = update;
-            SetTrayUpdateAvailable(update.VersionDisplay);
+            RefreshConfigVersaoDisponivel();
 
             _updateBalloon = true;
             notifyIcon.ShowBalloonTip(
@@ -511,45 +536,50 @@ namespace SoundSwitch
         private void notifyIcon_BalloonTipClicked(object sender, EventArgs e)
         {
             if (_updateBalloon)
-                ShowUpdater();
+                ShowSettings(tabConfiguracoes);
         }
 
-        /// <summary>
-        /// Exibe o item de atualização no menu da bandeja. Sem versão, o item fica oculto.
-        /// </summary>
-        private void SetTrayUpdateAvailable(string version)
-        {
-            bool available = !string.IsNullOrWhiteSpace(version);
-
-            atualizacaoDisponivelToolStripMenuItem.Visible = available;
-            atualizacaoDisponivelToolStripMenuItem.Text = available
-                ? $"Atualização disponível ({AppVersion.Format(version)})"
-                : "Atualização disponível";
-        }
-
-        private void ShowUpdater()
+        private async void btnConfigVersaoAtualizar_Click(object sender, EventArgs e)
         {
             if (_availableUpdate is null)
                 return;
 
-            using frmUpdater updater = new(_availableUpdate);
+            btnConfigVersaoAtualizar.Enabled = false;
 
-            updater.ShowDialog();
+            pbConfigVersao.Value = 0;
+            pbConfigVersao.Style = ProgressBarStyle.Marquee;
+            pbConfigVersao.Visible = true;
+
+            Progress<int> progress = new(percent =>
+            {
+                pbConfigVersao.Style = ProgressBarStyle.Blocks;
+                pbConfigVersao.Value = Math.Clamp(percent, 0, 100);
+            });
+
+            try
+            {
+                string installer = await UpdateInstaller.DownloadAsync(_availableUpdate, progress);
+
+                UpdateInstaller.Start(installer);
+
+                notifyIcon.Visible = false;
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "SoundSwitch",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                pbConfigVersao.Style = ProgressBarStyle.Blocks;
+                pbConfigVersao.Value = 0;
+                btnConfigVersaoAtualizar.Enabled = true;
+            }
         }
 
-        private void lblTrayAppVersion_Click(object sender, EventArgs e)
-        {
-            using frmAbout about = new();
-
-            about.ShowDialog();
-        }
-
-        private void atualizacaoDisponivelToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowUpdater();
-        }
-
-        private void configuraçõesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowSettings(TabPage tab = null)
         {
             _allowVisible = true;
 
@@ -557,9 +587,17 @@ namespace SoundSwitch
 
             RefreshAudioDevices();
 
+            if (tab is not null)
+                tabDefault.SelectedTab = tab;
+
             Show();
 
             Activate();
+        }
+
+        private void configuraçõesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowSettings();
         }
 
         private void sairToolStripMenuItem_Click(object sender, EventArgs e)

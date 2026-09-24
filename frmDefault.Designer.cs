@@ -34,205 +34,263 @@ namespace SoundSwitch
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDefault));
             tabDefault = new TabControl();
-            tabGeral = new TabPage();
-            cbGeralInitializeWindows = new CheckBox();
-            tabAudio = new TabPage();
-            label10 = new Label();
-            label9 = new Label();
-            cbAudioDeviceChangeNotification = new CheckBox();
-            lvAudioRecord = new ListView();
-            lvAudioPlayback = new ListView();
-            label8 = new Label();
-            label7 = new Label();
-            label6 = new Label();
-            txtDeviceRecordShortcut = new TextBox();
-            label5 = new Label();
-            txtDevicePlaybackShortcut = new TextBox();
-            cbAudioMuteOnLock = new CheckBox();
+            tabReproducao = new TabPage();
+            lbReproducaoAtalho = new Label();
+            txtReproducaoAtalho = new TextBox();
+            lvAudioReproducao = new ListView();
+            tabGravacao = new TabPage();
+            lbGravacaoAtalho = new Label();
+            txtGravacaoAtalho = new TextBox();
+            lvAudioGravacao = new ListView();
+            tabConfiguracoes = new TabPage();
+            lbConfigGeral = new Label();
+            cbConfigGeralIniciarWindows = new CheckBox();
+            lbConfigAudio = new Label();
+            cbConfigAudioMudoBloquear = new CheckBox();
+            lbConfigNotificacoes = new Label();
+            cbConfigNotificacoesMostrar = new CheckBox();
+            lbConfigVersao = new Label();
+            lbConfigVersaoAtual = new Label();
+            lbConfigVersaoDisponivel = new Label();
+            btnConfigVersaoAtualizar = new Button();
+            pbConfigVersao = new ProgressBar();
             notifyIcon = new NotifyIcon(components);
             cmDevices = new ContextMenuStrip(components);
             cmOptions = new ContextMenuStrip(components);
             lblTrayAppVersion = new ToolStripMenuItem();
-            atualizacaoDisponivelToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparatorUpdate = new ToolStripSeparator();
             configuraçõesToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             sairToolStripMenuItem = new ToolStripMenuItem();
             tabDefault.SuspendLayout();
-            tabGeral.SuspendLayout();
-            tabAudio.SuspendLayout();
+            tabReproducao.SuspendLayout();
+            tabGravacao.SuspendLayout();
+            tabConfiguracoes.SuspendLayout();
             cmOptions.SuspendLayout();
             SuspendLayout();
             // 
             // tabDefault
             // 
             tabDefault.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tabDefault.Controls.Add(tabGeral);
-            tabDefault.Controls.Add(tabAudio);
+            tabDefault.Controls.Add(tabReproducao);
+            tabDefault.Controls.Add(tabGravacao);
+            tabDefault.Controls.Add(tabConfiguracoes);
             tabDefault.Location = new Point(12, 12);
             tabDefault.Name = "tabDefault";
             tabDefault.SelectedIndex = 0;
             tabDefault.Size = new Size(776, 451);
             tabDefault.TabIndex = 0;
             // 
-            // tabGeral
+            // tabReproducao
             // 
-            tabGeral.Controls.Add(cbGeralInitializeWindows);
-            tabGeral.Location = new Point(4, 24);
-            tabGeral.Name = "tabGeral";
-            tabGeral.Size = new Size(768, 423);
-            tabGeral.TabIndex = 3;
-            tabGeral.Text = "Geral";
-            tabGeral.UseVisualStyleBackColor = true;
+            tabReproducao.Controls.Add(lbReproducaoAtalho);
+            tabReproducao.Controls.Add(txtReproducaoAtalho);
+            tabReproducao.Controls.Add(lvAudioReproducao);
+            tabReproducao.Location = new Point(4, 24);
+            tabReproducao.Name = "tabReproducao";
+            tabReproducao.Padding = new Padding(3);
+            tabReproducao.Size = new Size(768, 423);
+            tabReproducao.TabIndex = 4;
+            tabReproducao.Text = "Reprodução";
+            tabReproducao.UseVisualStyleBackColor = true;
             // 
-            // cbGeralInitializeWindows
+            // lbReproducaoAtalho
             // 
-            cbGeralInitializeWindows.AutoSize = true;
-            cbGeralInitializeWindows.Location = new Point(13, 12);
-            cbGeralInitializeWindows.Name = "cbGeralInitializeWindows";
-            cbGeralInitializeWindows.Size = new Size(147, 19);
-            cbGeralInitializeWindows.TabIndex = 9;
-            cbGeralInitializeWindows.Text = "Iniciar com o Windows";
-            cbGeralInitializeWindows.UseVisualStyleBackColor = true;
+            lbReproducaoAtalho.AutoSize = true;
+            lbReproducaoAtalho.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbReproducaoAtalho.Location = new Point(6, 400);
+            lbReproducaoAtalho.Name = "lbReproducaoAtalho";
+            lbReproducaoAtalho.Size = new Size(43, 15);
+            lbReproducaoAtalho.TabIndex = 12;
+            lbReproducaoAtalho.Text = "Atalho";
             // 
-            // tabAudio
+            // txtReproducaoAtalho
             // 
-            tabAudio.Controls.Add(label10);
-            tabAudio.Controls.Add(label9);
-            tabAudio.Controls.Add(cbAudioDeviceChangeNotification);
-            tabAudio.Controls.Add(lvAudioRecord);
-            tabAudio.Controls.Add(lvAudioPlayback);
-            tabAudio.Controls.Add(label8);
-            tabAudio.Controls.Add(label7);
-            tabAudio.Controls.Add(label6);
-            tabAudio.Controls.Add(txtDeviceRecordShortcut);
-            tabAudio.Controls.Add(label5);
-            tabAudio.Controls.Add(txtDevicePlaybackShortcut);
-            tabAudio.Controls.Add(cbAudioMuteOnLock);
-            tabAudio.Location = new Point(4, 24);
-            tabAudio.Name = "tabAudio";
-            tabAudio.Size = new Size(768, 423);
-            tabAudio.TabIndex = 2;
-            tabAudio.Text = "Áudio";
-            tabAudio.UseVisualStyleBackColor = true;
+            txtReproducaoAtalho.Location = new Point(60, 397);
+            txtReproducaoAtalho.Name = "txtReproducaoAtalho";
+            txtReproducaoAtalho.Size = new Size(132, 23);
+            txtReproducaoAtalho.TabIndex = 11;
+            txtReproducaoAtalho.TextAlign = HorizontalAlignment.Center;
+            txtReproducaoAtalho.Enter += shortcutInput_Enter;
+            txtReproducaoAtalho.KeyDown += txtReproducaoAtalho_KeyDown;
+            txtReproducaoAtalho.Leave += shortcutInput_Leave;
             // 
-            // label10
+            // lvAudioReproducao
             // 
-            label10.AutoSize = true;
-            label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label10.Location = new Point(464, 82);
-            label10.Name = "label10";
-            label10.Size = new Size(86, 15);
-            label10.TabIndex = 11;
-            label10.Text = "Configurações";
+            lvAudioReproducao.CheckBoxes = true;
+            lvAudioReproducao.Location = new Point(6, 6);
+            lvAudioReproducao.Name = "lvAudioReproducao";
+            lvAudioReproducao.Size = new Size(756, 387);
+            lvAudioReproducao.TabIndex = 8;
+            lvAudioReproducao.UseCompatibleStateImageBehavior = false;
             // 
-            // label9
+            // tabGravacao
             // 
-            label9.AutoSize = true;
-            label9.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label9.Location = new Point(464, 12);
-            label9.Name = "label9";
-            label9.Size = new Size(48, 15);
-            label9.TabIndex = 10;
-            label9.Text = "Atalhos";
+            tabGravacao.Controls.Add(lbGravacaoAtalho);
+            tabGravacao.Controls.Add(txtGravacaoAtalho);
+            tabGravacao.Controls.Add(lvAudioGravacao);
+            tabGravacao.Location = new Point(4, 24);
+            tabGravacao.Name = "tabGravacao";
+            tabGravacao.Size = new Size(768, 423);
+            tabGravacao.TabIndex = 5;
+            tabGravacao.Text = "Gravação";
+            tabGravacao.UseVisualStyleBackColor = true;
             // 
-            // cbAudioDeviceChangeNotification
+            // lbGravacaoAtalho
             // 
-            cbAudioDeviceChangeNotification.AutoSize = true;
-            cbAudioDeviceChangeNotification.Location = new Point(464, 101);
-            cbAudioDeviceChangeNotification.Name = "cbAudioDeviceChangeNotification";
-            cbAudioDeviceChangeNotification.Size = new Size(241, 19);
-            cbAudioDeviceChangeNotification.TabIndex = 9;
-            cbAudioDeviceChangeNotification.Text = "Mostrar notificação ao alterar dispositivo";
-            cbAudioDeviceChangeNotification.UseVisualStyleBackColor = true;
+            lbGravacaoAtalho.AutoSize = true;
+            lbGravacaoAtalho.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbGravacaoAtalho.Location = new Point(6, 400);
+            lbGravacaoAtalho.Name = "lbGravacaoAtalho";
+            lbGravacaoAtalho.Size = new Size(43, 15);
+            lbGravacaoAtalho.TabIndex = 12;
+            lbGravacaoAtalho.Text = "Atalho";
             // 
-            // cbAudioMuteOnLock
+            // txtGravacaoAtalho
             // 
-            cbAudioMuteOnLock.AutoSize = true;
-            cbAudioMuteOnLock.Location = new Point(464, 124);
-            cbAudioMuteOnLock.Name = "cbAudioMuteOnLock";
-            cbAudioMuteOnLock.Size = new Size(250, 19);
-            cbAudioMuteOnLock.TabIndex = 2;
-            cbAudioMuteOnLock.Text = "Ao bloquear o computador, ativar o mudo";
-            cbAudioMuteOnLock.UseVisualStyleBackColor = true;
+            txtGravacaoAtalho.Location = new Point(60, 397);
+            txtGravacaoAtalho.Name = "txtGravacaoAtalho";
+            txtGravacaoAtalho.Size = new Size(132, 23);
+            txtGravacaoAtalho.TabIndex = 11;
+            txtGravacaoAtalho.TextAlign = HorizontalAlignment.Center;
+            txtGravacaoAtalho.Enter += shortcutInput_Enter;
+            txtGravacaoAtalho.KeyDown += txtGravacaoAtalho_KeyDown;
+            txtGravacaoAtalho.Leave += shortcutInput_Leave;
             // 
-            // lvAudioRecord
+            // lvAudioGravacao
             // 
-            lvAudioRecord.CheckBoxes = true;
-            lvAudioRecord.Location = new Point(13, 227);
-            lvAudioRecord.Name = "lvAudioRecord";
-            lvAudioRecord.Size = new Size(441, 176);
-            lvAudioRecord.TabIndex = 8;
-            lvAudioRecord.UseCompatibleStateImageBehavior = false;
+            lvAudioGravacao.CheckBoxes = true;
+            lvAudioGravacao.Location = new Point(6, 6);
+            lvAudioGravacao.Name = "lvAudioGravacao";
+            lvAudioGravacao.Size = new Size(756, 387);
+            lvAudioGravacao.TabIndex = 9;
+            lvAudioGravacao.UseCompatibleStateImageBehavior = false;
             // 
-            // lvAudioPlayback
+            // tabConfiguracoes
             // 
-            lvAudioPlayback.CheckBoxes = true;
-            lvAudioPlayback.Location = new Point(13, 30);
-            lvAudioPlayback.Name = "lvAudioPlayback";
-            lvAudioPlayback.Size = new Size(441, 176);
-            lvAudioPlayback.TabIndex = 0;
-            lvAudioPlayback.UseCompatibleStateImageBehavior = false;
+            tabConfiguracoes.Controls.Add(lbConfigGeral);
+            tabConfiguracoes.Controls.Add(cbConfigGeralIniciarWindows);
+            tabConfiguracoes.Controls.Add(lbConfigAudio);
+            tabConfiguracoes.Controls.Add(cbConfigAudioMudoBloquear);
+            tabConfiguracoes.Controls.Add(lbConfigNotificacoes);
+            tabConfiguracoes.Controls.Add(cbConfigNotificacoesMostrar);
+            tabConfiguracoes.Controls.Add(lbConfigVersao);
+            tabConfiguracoes.Controls.Add(lbConfigVersaoAtual);
+            tabConfiguracoes.Controls.Add(lbConfigVersaoDisponivel);
+            tabConfiguracoes.Controls.Add(btnConfigVersaoAtualizar);
+            tabConfiguracoes.Controls.Add(pbConfigVersao);
+            tabConfiguracoes.Location = new Point(4, 24);
+            tabConfiguracoes.Name = "tabConfiguracoes";
+            tabConfiguracoes.Size = new Size(768, 423);
+            tabConfiguracoes.TabIndex = 2;
+            tabConfiguracoes.Text = "Configurações";
+            tabConfiguracoes.UseVisualStyleBackColor = true;
             // 
-            // label8
+            // lbConfigGeral
             // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label8.Location = new Point(13, 209);
-            label8.Name = "label8";
-            label8.Size = new Size(59, 15);
-            label8.TabIndex = 7;
-            label8.Text = "Gravação";
+            lbConfigGeral.AutoSize = true;
+            lbConfigGeral.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbConfigGeral.Location = new Point(13, 12);
+            lbConfigGeral.Name = "lbConfigGeral";
+            lbConfigGeral.Size = new Size(37, 15);
+            lbConfigGeral.TabIndex = 0;
+            lbConfigGeral.Text = "Geral";
             // 
-            // label7
+            // cbConfigGeralIniciarWindows
             // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label7.Location = new Point(13, 12);
-            label7.Name = "label7";
-            label7.Size = new Size(74, 15);
-            label7.TabIndex = 7;
-            label7.Text = "Reprodução";
+            cbConfigGeralIniciarWindows.AutoSize = true;
+            cbConfigGeralIniciarWindows.Location = new Point(13, 31);
+            cbConfigGeralIniciarWindows.Name = "cbConfigGeralIniciarWindows";
+            cbConfigGeralIniciarWindows.Size = new Size(147, 19);
+            cbConfigGeralIniciarWindows.TabIndex = 1;
+            cbConfigGeralIniciarWindows.Text = "Iniciar com o Windows";
+            cbConfigGeralIniciarWindows.UseVisualStyleBackColor = true;
             // 
-            // label6
+            // lbConfigAudio
             // 
-            label6.AutoSize = true;
-            label6.Location = new Point(618, 30);
-            label6.Name = "label6";
-            label6.Size = new Size(56, 15);
-            label6.TabIndex = 6;
-            label6.Text = "Gravação";
+            lbConfigAudio.AutoSize = true;
+            lbConfigAudio.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbConfigAudio.Location = new Point(13, 62);
+            lbConfigAudio.Name = "lbConfigAudio";
+            lbConfigAudio.Size = new Size(39, 15);
+            lbConfigAudio.TabIndex = 2;
+            lbConfigAudio.Text = "Áudio";
             // 
-            // txtDeviceRecordShortcut
+            // cbConfigAudioMudoBloquear
             // 
-            txtDeviceRecordShortcut.Location = new Point(618, 49);
-            txtDeviceRecordShortcut.Name = "txtDeviceRecordShortcut";
-            txtDeviceRecordShortcut.Size = new Size(132, 23);
-            txtDeviceRecordShortcut.TabIndex = 5;
-            txtDeviceRecordShortcut.TextAlign = HorizontalAlignment.Center;
-            txtDeviceRecordShortcut.Enter += shortcutInput_Enter;
-            txtDeviceRecordShortcut.KeyDown += txtDeviceRecordShortcut_KeyDown;
-            txtDeviceRecordShortcut.Leave += shortcutInput_Leave;
+            cbConfigAudioMudoBloquear.AutoSize = true;
+            cbConfigAudioMudoBloquear.Location = new Point(13, 81);
+            cbConfigAudioMudoBloquear.Name = "cbConfigAudioMudoBloquear";
+            cbConfigAudioMudoBloquear.Size = new Size(250, 19);
+            cbConfigAudioMudoBloquear.TabIndex = 3;
+            cbConfigAudioMudoBloquear.Text = "Ao bloquear o computador, ativar o mudo";
+            cbConfigAudioMudoBloquear.UseVisualStyleBackColor = true;
             // 
-            // label5
+            // lbConfigNotificacoes
             // 
-            label5.AutoSize = true;
-            label5.Location = new Point(464, 30);
-            label5.Name = "label5";
-            label5.Size = new Size(71, 15);
-            label5.TabIndex = 4;
-            label5.Text = "Reprodução";
+            lbConfigNotificacoes.AutoSize = true;
+            lbConfigNotificacoes.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbConfigNotificacoes.Location = new Point(13, 112);
+            lbConfigNotificacoes.Name = "lbConfigNotificacoes";
+            lbConfigNotificacoes.Size = new Size(76, 15);
+            lbConfigNotificacoes.TabIndex = 4;
+            lbConfigNotificacoes.Text = "Notificações";
             // 
-            // txtDevicePlaybackShortcut
+            // cbConfigNotificacoesMostrar
             // 
-            txtDevicePlaybackShortcut.Location = new Point(464, 48);
-            txtDevicePlaybackShortcut.Name = "txtDevicePlaybackShortcut";
-            txtDevicePlaybackShortcut.Size = new Size(132, 23);
-            txtDevicePlaybackShortcut.TabIndex = 3;
-            txtDevicePlaybackShortcut.TextAlign = HorizontalAlignment.Center;
-            txtDevicePlaybackShortcut.Enter += shortcutInput_Enter;
-            txtDevicePlaybackShortcut.KeyDown += txtDevicePlaybackShortcut_KeyDown;
-            txtDevicePlaybackShortcut.Leave += shortcutInput_Leave;
+            cbConfigNotificacoesMostrar.AutoSize = true;
+            cbConfigNotificacoesMostrar.Location = new Point(13, 131);
+            cbConfigNotificacoesMostrar.Name = "cbConfigNotificacoesMostrar";
+            cbConfigNotificacoesMostrar.Size = new Size(262, 19);
+            cbConfigNotificacoesMostrar.TabIndex = 5;
+            cbConfigNotificacoesMostrar.Text = "Mostrar notificação ao alterar um dispositivo";
+            cbConfigNotificacoesMostrar.UseVisualStyleBackColor = true;
+            // 
+            // lbConfigVersao
+            // 
+            lbConfigVersao.AutoSize = true;
+            lbConfigVersao.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbConfigVersao.Location = new Point(400, 12);
+            lbConfigVersao.Name = "lbConfigVersao";
+            lbConfigVersao.Size = new Size(46, 15);
+            lbConfigVersao.TabIndex = 6;
+            lbConfigVersao.Text = "Versão";
+            // 
+            // lbConfigVersaoAtual
+            // 
+            lbConfigVersaoAtual.AutoSize = true;
+            lbConfigVersaoAtual.Location = new Point(400, 31);
+            lbConfigVersaoAtual.Name = "lbConfigVersaoAtual";
+            lbConfigVersaoAtual.Size = new Size(43, 15);
+            lbConfigVersaoAtual.TabIndex = 7;
+            lbConfigVersaoAtual.Text = "Atual:";
+            // 
+            // lbConfigVersaoDisponivel
+            // 
+            lbConfigVersaoDisponivel.AutoSize = true;
+            lbConfigVersaoDisponivel.Location = new Point(400, 50);
+            lbConfigVersaoDisponivel.Name = "lbConfigVersaoDisponivel";
+            lbConfigVersaoDisponivel.Size = new Size(73, 15);
+            lbConfigVersaoDisponivel.TabIndex = 8;
+            lbConfigVersaoDisponivel.Text = "Disponível: —";
+            // 
+            // btnConfigVersaoAtualizar
+            // 
+            btnConfigVersaoAtualizar.Location = new Point(400, 73);
+            btnConfigVersaoAtualizar.Name = "btnConfigVersaoAtualizar";
+            btnConfigVersaoAtualizar.Size = new Size(100, 23);
+            btnConfigVersaoAtualizar.TabIndex = 9;
+            btnConfigVersaoAtualizar.Text = "Atualizar";
+            btnConfigVersaoAtualizar.UseVisualStyleBackColor = true;
+            btnConfigVersaoAtualizar.Visible = false;
+            btnConfigVersaoAtualizar.Click += btnConfigVersaoAtualizar_Click;
+            // 
+            // pbConfigVersao
+            // 
+            pbConfigVersao.Location = new Point(400, 102);
+            pbConfigVersao.Name = "pbConfigVersao";
+            pbConfigVersao.Size = new Size(200, 15);
+            pbConfigVersao.TabIndex = 10;
+            pbConfigVersao.Visible = false;
             // 
             // notifyIcon
             // 
@@ -248,46 +306,32 @@ namespace SoundSwitch
             // 
             // cmOptions
             // 
-            cmOptions.Items.AddRange(new ToolStripItem[] { lblTrayAppVersion, atualizacaoDisponivelToolStripMenuItem, toolStripSeparatorUpdate, configuraçõesToolStripMenuItem, toolStripSeparator1, sairToolStripMenuItem });
+            cmOptions.Items.AddRange(new ToolStripItem[] { lblTrayAppVersion, configuraçõesToolStripMenuItem, toolStripSeparator1, sairToolStripMenuItem });
             cmOptions.Name = "cmOptions";
-            cmOptions.Size = new Size(206, 104);
+            cmOptions.Size = new Size(193, 76);
             // 
             // lblTrayAppVersion
             // 
             lblTrayAppVersion.Name = "lblTrayAppVersion";
-            lblTrayAppVersion.Size = new Size(205, 22);
+            lblTrayAppVersion.Size = new Size(192, 22);
             lblTrayAppVersion.Text = "SoundSwitch";
-            lblTrayAppVersion.Click += lblTrayAppVersion_Click;
-            // 
-            // atualizacaoDisponivelToolStripMenuItem
-            // 
-            atualizacaoDisponivelToolStripMenuItem.Name = "atualizacaoDisponivelToolStripMenuItem";
-            atualizacaoDisponivelToolStripMenuItem.Size = new Size(205, 22);
-            atualizacaoDisponivelToolStripMenuItem.Text = "Atualização disponível";
-            atualizacaoDisponivelToolStripMenuItem.Visible = false;
-            atualizacaoDisponivelToolStripMenuItem.Click += atualizacaoDisponivelToolStripMenuItem_Click;
-            // 
-            // toolStripSeparatorUpdate
-            // 
-            toolStripSeparatorUpdate.Name = "toolStripSeparatorUpdate";
-            toolStripSeparatorUpdate.Size = new Size(202, 6);
             // 
             // configuraçõesToolStripMenuItem
             // 
             configuraçõesToolStripMenuItem.Name = "configuraçõesToolStripMenuItem";
-            configuraçõesToolStripMenuItem.Size = new Size(205, 22);
+            configuraçõesToolStripMenuItem.Size = new Size(192, 22);
             configuraçõesToolStripMenuItem.Text = "Configurações";
             configuraçõesToolStripMenuItem.Click += configuraçõesToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(202, 6);
+            toolStripSeparator1.Size = new Size(189, 6);
             // 
             // sairToolStripMenuItem
             // 
             sairToolStripMenuItem.Name = "sairToolStripMenuItem";
-            sairToolStripMenuItem.Size = new Size(205, 22);
+            sairToolStripMenuItem.Size = new Size(192, 22);
             sairToolStripMenuItem.Text = "Sair";
             sairToolStripMenuItem.Click += sairToolStripMenuItem_Click;
             // 
@@ -306,10 +350,12 @@ namespace SoundSwitch
             Text = "SoundSwitch";
             FormClosing += frmDefault_FormClosing;
             tabDefault.ResumeLayout(false);
-            tabGeral.ResumeLayout(false);
-            tabGeral.PerformLayout();
-            tabAudio.ResumeLayout(false);
-            tabAudio.PerformLayout();
+            tabReproducao.ResumeLayout(false);
+            tabReproducao.PerformLayout();
+            tabGravacao.ResumeLayout(false);
+            tabGravacao.PerformLayout();
+            tabConfiguracoes.ResumeLayout(false);
+            tabConfiguracoes.PerformLayout();
             cmOptions.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -317,29 +363,32 @@ namespace SoundSwitch
         #endregion
 
         private TabControl tabDefault;
-        private TabPage tabAudio;
-        private CheckBox cbAudioMuteOnLock;
-        private Label label6;
-        private TextBox txtDeviceRecordShortcut;
-        private Label label5;
-        private TextBox txtDevicePlaybackShortcut;
+        private TabPage tabConfiguracoes;
+        private Label lbConfigGeral;
+        private CheckBox cbConfigGeralIniciarWindows;
+        private Label lbConfigAudio;
+        private CheckBox cbConfigAudioMudoBloquear;
+        private Label lbConfigNotificacoes;
+        private CheckBox cbConfigNotificacoesMostrar;
+        private Label lbConfigVersao;
+        private Label lbConfigVersaoAtual;
+        private Label lbConfigVersaoDisponivel;
+        private Button btnConfigVersaoAtualizar;
+        private ProgressBar pbConfigVersao;
         private NotifyIcon notifyIcon;
-        private Label label8;
-        private Label label7;
-        private ListView lvAudioRecord;
-        private ListView lvAudioPlayback;
         private ContextMenuStrip cmDevices;
         private ContextMenuStrip cmOptions;
         private ToolStripMenuItem lblTrayAppVersion;
-        private ToolStripMenuItem atualizacaoDisponivelToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparatorUpdate;
         private ToolStripMenuItem configuraçõesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem sairToolStripMenuItem;
-        private CheckBox cbAudioDeviceChangeNotification;
-        private Label label10;
-        private Label label9;
-        private TabPage tabGeral;
-        private CheckBox cbGeralInitializeWindows;
+        private TabPage tabReproducao;
+        private ListView lvAudioReproducao;
+        private Label lbReproducaoAtalho;
+        private TextBox txtReproducaoAtalho;
+        private TabPage tabGravacao;
+        private Label lbGravacaoAtalho;
+        private TextBox txtGravacaoAtalho;
+        private ListView lvAudioGravacao;
     }
 }

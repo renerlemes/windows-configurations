@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -10,7 +10,7 @@
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     <AssemblyName>SoundSwitch</AssemblyName>
     <RootNamespace>SoundSwitch</RootNamespace>
-    <Version>1.0.4</Version>
+    <Version>1.0.10</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AssemblyTitle>SoundSwitch</AssemblyTitle>
     <Product>SoundSwitch</Product>
