@@ -9,12 +9,8 @@ namespace Windows.Configurations
         private const string MutexName = @"Local\Windows.Configurations";
 
         [STAThread]
-        static int Main(string[] args)
+        static void Main()
         {
-            // A instância elevada aplica uma ação e sai: não abre janela nem disputa o mutex.
-            if (ElevatedAction.TryHandleCommandLine(args, out int actionExitCode))
-                return actionExitCode;
-
             ApplicationConfiguration.Initialize();
 
             using Mutex mutex = new(true, MutexName, out bool createdNew);
@@ -27,12 +23,10 @@ namespace Windows.Configurations
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
-                return 0;
+                return;
             }
 
             Application.Run(new frmDefault());
-
-            return 0;
         }
     }
 }

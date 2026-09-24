@@ -49,19 +49,6 @@ namespace Windows.Configurations
             label5 = new Label();
             txtDevicePlaybackShortcut = new TextBox();
             cbAudioMuteOnLock = new CheckBox();
-            tabPainelControle = new TabPage();
-            cbPainelControleNeverSleepOrTurnOffDisplay = new CheckBox();
-            cbPainelControleLidCloseDoNothing = new CheckBox();
-            label3 = new Label();
-            label2 = new Label();
-            label1 = new Label();
-            cbPainelControleDisableStartupSound = new CheckBox();
-            cbPainelControleNoSoundScheme = new CheckBox();
-            cbPainelControleUAC = new CheckBox();
-            tabPersonalizacao = new TabPage();
-            cbPersonalizacaoDisableItemsTaskbar = new CheckBox();
-            cbPersonalizacaoTaskbarAlignAndSettings = new CheckBox();
-            label4 = new Label();
             notifyIcon = new NotifyIcon(components);
             cmDevices = new ContextMenuStrip(components);
             cmOptions = new ContextMenuStrip(components);
@@ -74,8 +61,6 @@ namespace Windows.Configurations
             tabDefault.SuspendLayout();
             tabGeral.SuspendLayout();
             tabAudio.SuspendLayout();
-            tabPainelControle.SuspendLayout();
-            tabPersonalizacao.SuspendLayout();
             cmOptions.SuspendLayout();
             SuspendLayout();
             // 
@@ -84,8 +69,6 @@ namespace Windows.Configurations
             tabDefault.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabDefault.Controls.Add(tabGeral);
             tabDefault.Controls.Add(tabAudio);
-            tabDefault.Controls.Add(tabPainelControle);
-            tabDefault.Controls.Add(tabPersonalizacao);
             tabDefault.Location = new Point(12, 12);
             tabDefault.Name = "tabDefault";
             tabDefault.SelectedIndex = 0;
@@ -162,6 +145,16 @@ namespace Windows.Configurations
             cbAudioDeviceChangeNotification.TabIndex = 9;
             cbAudioDeviceChangeNotification.Text = "Mostrar notificação ao alterar dispositivo";
             cbAudioDeviceChangeNotification.UseVisualStyleBackColor = true;
+            // 
+            // cbAudioMuteOnLock
+            // 
+            cbAudioMuteOnLock.AutoSize = true;
+            cbAudioMuteOnLock.Location = new Point(464, 124);
+            cbAudioMuteOnLock.Name = "cbAudioMuteOnLock";
+            cbAudioMuteOnLock.Size = new Size(250, 19);
+            cbAudioMuteOnLock.TabIndex = 2;
+            cbAudioMuteOnLock.Text = "Ao bloquear o computador, ativar o mudo";
+            cbAudioMuteOnLock.UseVisualStyleBackColor = true;
             // 
             // lvAudioRecord
             // 
@@ -241,156 +234,6 @@ namespace Windows.Configurations
             txtDevicePlaybackShortcut.KeyDown += txtDevicePlaybackShortcut_KeyDown;
             txtDevicePlaybackShortcut.Leave += shortcutInput_Leave;
             // 
-            // cbAudioMuteOnLock
-            // 
-            cbAudioMuteOnLock.AutoSize = true;
-            cbAudioMuteOnLock.Location = new Point(464, 124);
-            cbAudioMuteOnLock.Name = "cbAudioMuteOnLock";
-            cbAudioMuteOnLock.Size = new Size(250, 19);
-            cbAudioMuteOnLock.TabIndex = 2;
-            cbAudioMuteOnLock.Text = "Ao bloquear o computador, ativar o mudo";
-            cbAudioMuteOnLock.UseVisualStyleBackColor = true;
-            // 
-            // tabPainelControle
-            // 
-            tabPainelControle.Controls.Add(cbPainelControleNeverSleepOrTurnOffDisplay);
-            tabPainelControle.Controls.Add(cbPainelControleLidCloseDoNothing);
-            tabPainelControle.Controls.Add(label3);
-            tabPainelControle.Controls.Add(label2);
-            tabPainelControle.Controls.Add(label1);
-            tabPainelControle.Controls.Add(cbPainelControleDisableStartupSound);
-            tabPainelControle.Controls.Add(cbPainelControleNoSoundScheme);
-            tabPainelControle.Controls.Add(cbPainelControleUAC);
-            tabPainelControle.Location = new Point(4, 24);
-            tabPainelControle.Name = "tabPainelControle";
-            tabPainelControle.Padding = new Padding(3);
-            tabPainelControle.Size = new Size(768, 423);
-            tabPainelControle.TabIndex = 0;
-            tabPainelControle.Text = "Painel de Controle";
-            tabPainelControle.UseVisualStyleBackColor = true;
-            // 
-            // cbPainelControleNeverSleepOrTurnOffDisplay
-            // 
-            cbPainelControleNeverSleepOrTurnOffDisplay.AutoSize = true;
-            cbPainelControleNeverSleepOrTurnOffDisplay.Location = new Point(13, 196);
-            cbPainelControleNeverSleepOrTurnOffDisplay.Name = "cbPainelControleNeverSleepOrTurnOffDisplay";
-            cbPainelControleNeverSleepOrTurnOffDisplay.Size = new Size(403, 19);
-            cbPainelControleNeverSleepOrTurnOffDisplay.TabIndex = 5;
-            cbPainelControleNeverSleepOrTurnOffDisplay.Text = "Desliga o vídeo e suspende o computador: Nunca (bateria e conectado)";
-            cbPainelControleNeverSleepOrTurnOffDisplay.UseVisualStyleBackColor = true;
-            // 
-            // cbPainelControleLidCloseDoNothing
-            // 
-            cbPainelControleLidCloseDoNothing.AutoSize = true;
-            cbPainelControleLidCloseDoNothing.Location = new Point(13, 168);
-            cbPainelControleLidCloseDoNothing.Name = "cbPainelControleLidCloseDoNothing";
-            cbPainelControleLidCloseDoNothing.Size = new Size(311, 19);
-            cbPainelControleLidCloseDoNothing.TabIndex = 4;
-            cbPainelControleLidCloseDoNothing.Text = "Ao fechar a tampa, não faz nada (bateria e conectado)";
-            cbPainelControleLidCloseDoNothing.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label3.Location = new Point(13, 144);
-            label3.Name = "label3";
-            label3.Size = new Size(109, 15);
-            label3.TabIndex = 3;
-            label3.Text = "Opções de Energia";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(13, 92);
-            label2.Name = "label2";
-            label2.Size = new Size(106, 15);
-            label2.TabIndex = 3;
-            label2.Text = "Contas de Usuário";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label1.Location = new Point(13, 12);
-            label1.Name = "label1";
-            label1.Size = new Size(101, 15);
-            label1.TabIndex = 3;
-            label1.Text = "Hardware e Sons";
-            // 
-            // cbPainelControleDisableStartupSound
-            // 
-            cbPainelControleDisableStartupSound.AutoSize = true;
-            cbPainelControleDisableStartupSound.Location = new Point(13, 64);
-            cbPainelControleDisableStartupSound.Name = "cbPainelControleDisableStartupSound";
-            cbPainelControleDisableStartupSound.Size = new Size(266, 19);
-            cbPainelControleDisableStartupSound.TabIndex = 2;
-            cbPainelControleDisableStartupSound.Text = "Não tocar o som na inicialização do Windows";
-            cbPainelControleDisableStartupSound.UseVisualStyleBackColor = true;
-            // 
-            // cbPainelControleNoSoundScheme
-            // 
-            cbPainelControleNoSoundScheme.AutoSize = true;
-            cbPainelControleNoSoundScheme.Location = new Point(13, 36);
-            cbPainelControleNoSoundScheme.Name = "cbPainelControleNoSoundScheme";
-            cbPainelControleNoSoundScheme.Size = new Size(273, 19);
-            cbPainelControleNoSoundScheme.TabIndex = 1;
-            cbPainelControleNoSoundScheme.Text = "Define o esquema de som como Nenhum som";
-            cbPainelControleNoSoundScheme.UseVisualStyleBackColor = true;
-            // 
-            // cbPainelControleUAC
-            // 
-            cbPainelControleUAC.AutoSize = true;
-            cbPainelControleUAC.Location = new Point(13, 116);
-            cbPainelControleUAC.Name = "cbPainelControleUAC";
-            cbPainelControleUAC.Size = new Size(348, 19);
-            cbPainelControleUAC.TabIndex = 0;
-            cbPainelControleUAC.Text = "Define o Controle de Conta de Usuário como Nunca notificar";
-            cbPainelControleUAC.UseVisualStyleBackColor = true;
-            // 
-            // tabPersonalizacao
-            // 
-            tabPersonalizacao.Controls.Add(cbPersonalizacaoDisableItemsTaskbar);
-            tabPersonalizacao.Controls.Add(cbPersonalizacaoTaskbarAlignAndSettings);
-            tabPersonalizacao.Controls.Add(label4);
-            tabPersonalizacao.Location = new Point(4, 24);
-            tabPersonalizacao.Name = "tabPersonalizacao";
-            tabPersonalizacao.Size = new Size(768, 423);
-            tabPersonalizacao.TabIndex = 1;
-            tabPersonalizacao.Text = "Personalização";
-            tabPersonalizacao.UseVisualStyleBackColor = true;
-            // 
-            // cbPersonalizacaoDisableItemsTaskbar
-            // 
-            cbPersonalizacaoDisableItemsTaskbar.AutoSize = true;
-            cbPersonalizacaoDisableItemsTaskbar.Location = new Point(13, 62);
-            cbPersonalizacaoDisableItemsTaskbar.Name = "cbPersonalizacaoDisableItemsTaskbar";
-            cbPersonalizacaoDisableItemsTaskbar.Size = new Size(364, 19);
-            cbPersonalizacaoDisableItemsTaskbar.TabIndex = 10;
-            cbPersonalizacaoDisableItemsTaskbar.Text = "Oculta Pesquisa e desativa Visão de tarefas, Widgets e Continuar";
-            cbPersonalizacaoDisableItemsTaskbar.UseVisualStyleBackColor = true;
-            // 
-            // cbPersonalizacaoTaskbarAlignAndSettings
-            // 
-            cbPersonalizacaoTaskbarAlignAndSettings.AutoSize = true;
-            cbPersonalizacaoTaskbarAlignAndSettings.Location = new Point(13, 35);
-            cbPersonalizacaoTaskbarAlignAndSettings.Name = "cbPersonalizacaoTaskbarAlignAndSettings";
-            cbPersonalizacaoTaskbarAlignAndSettings.Size = new Size(385, 19);
-            cbPersonalizacaoTaskbarAlignAndSettings.TabIndex = 9;
-            cbPersonalizacaoTaskbarAlignAndSettings.Text = "Alinha a barra à esquerda e aplica os comportamentos configurados";
-            cbPersonalizacaoTaskbarAlignAndSettings.UseVisualStyleBackColor = true;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label4.Location = new Point(13, 12);
-            label4.Name = "label4";
-            label4.Size = new Size(97, 15);
-            label4.TabIndex = 8;
-            label4.Text = "Barra de Tarefas";
-            // 
             // notifyIcon
             // 
             notifyIcon.Icon = (Icon)resources.GetObject("notifyIcon.Icon");
@@ -467,10 +310,6 @@ namespace Windows.Configurations
             tabGeral.PerformLayout();
             tabAudio.ResumeLayout(false);
             tabAudio.PerformLayout();
-            tabPainelControle.ResumeLayout(false);
-            tabPainelControle.PerformLayout();
-            tabPersonalizacao.ResumeLayout(false);
-            tabPersonalizacao.PerformLayout();
             cmOptions.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -478,19 +317,6 @@ namespace Windows.Configurations
         #endregion
 
         private TabControl tabDefault;
-        private TabPage tabPainelControle;
-        private CheckBox cbPainelControleUAC;
-        private CheckBox cbPainelControleNoSoundScheme;
-        private CheckBox cbPainelControleDisableStartupSound;
-        private Label label2;
-        private Label label1;
-        private Label label3;
-        private CheckBox cbPainelControleLidCloseDoNothing;
-        private CheckBox cbPainelControleNeverSleepOrTurnOffDisplay;
-        private TabPage tabPersonalizacao;
-        private CheckBox cbPersonalizacaoDisableItemsTaskbar;
-        private CheckBox cbPersonalizacaoTaskbarAlignAndSettings;
-        private Label label4;
         private TabPage tabAudio;
         private CheckBox cbAudioMuteOnLock;
         private Label label6;

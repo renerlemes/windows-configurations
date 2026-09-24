@@ -6,10 +6,9 @@
 		<security>
 			<requestedPrivileges>
 				<!--
-				O uso principal é áudio e bandeja, que não precisa de privilégio. Elevar o
-				processo inteiro impediria a inicialização com o Windows em máquina gerenciada,
-				onde o usuário não é administrador local. As poucas ações que gravam em HKLM
-				sobem uma instância elevada só para elas.
+				O gerenciamento de áudio não precisa de privilégio. Elevar o processo impediria
+				a inicialização com o Windows em máquinas gerenciadas, onde o usuário geralmente
+				não é administrador local.
 				-->
 				<requestedExecutionLevel level="asInvoker" uiAccess="false" />
 			</requestedPrivileges>
